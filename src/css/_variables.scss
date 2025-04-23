@@ -1,0 +1,102 @@
+/* _variables.scss */
+
+// 1. 색상 변수
+// 메인 색상
+$primary: #9e831e; // 골드
+$secondary: #fe820f; // 주황색 (포인트 색상)
+$accent: #3c8fd3; // 파란색 (확인 아이콘)
+$gradient-start: #ff8669; // 그라데이션 시작 (코랄/주황)
+$gradient-end: #ffeba2; // 그라데이션 끝 (노란색)
+
+// 배경 색상
+$bg-btn: #b8971d; //골드/노란색 버튼 색상
+$bg-dark: #000; // 어두운 배경
+$bg-card: #25241f; // 카드 배경
+$bg-light: #fff; // 흰색 배경 (QR코드 배경 등)
+$bg-pc: #76572c;
+
+// 텍스트 색상
+$text-primary: #fff; // 기본 텍스트
+$text-secondary: #92918f; // 보조 텍스트
+$text-muted: #666562; // 보조 텍스트
+$text-dark: #111; // 어두운 텍스트 (흰 배경 위)
+$text-highlight: #ff8e24; // 강조 텍스트 (주황색)
+
+// 기능성 색상
+$success: #3c8fd3; // 성공 상태
+$error: #f44336; // 오류 상태
+$info: #2196f3; // 정보 상태
+
+// 2. 폰트 설정
+$font-primary: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+  sans-serif;
+$font-en-primary: "Space Grotesk", sans-serif; // 영문 기본 폰트
+$font-en-secondary: "Poppins", sans-serif; // 영문 보조 폰트
+
+// 폰트 크기
+$font-xs: 1.2rem; // 12px
+$font-sm: 1.4rem; // 14px
+$font-md: 1.5rem; // 15px
+$font-lg: 1.6rem; // 16px
+$font-xl: 1.8rem; // 18px
+$font-2xl: 2.2rem; // 22px
+$font-3xl: 3.8rem; // 38px
+$font-4xl: 5rem; // 50px
+
+// 폰트 무게
+$weight-light: 300;
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+$weight-bold: 700;
+
+// 3. 간격 및 여백
+$spacing-xs: 0.4rem; // 4px
+$spacing-sm: 0.8rem; // 8px
+$spacing-md: 1.2rem; // 12px
+$spacing-lg: 1.6rem; // 16px
+$spacing-xl: 2.4rem; // 24px
+$spacing-2xl: 3.2rem; // 32px
+$spacing-3xl: 4rem; // 40px
+$spacing-4xl: 4.8rem; // 48px
+
+// 4. 레이아웃
+$max-width: 76.8rem; // 768px - 모바일 화면 최대 너비
+
+// 5. 테두리 및 그림자
+$border-radius-sm: 0.4rem; // 4px
+$border-radius-md: 0.8rem; // 8px
+$border-radius-lg: 1.6rem; // 16px
+$border-radius-xl: 2rem; // 20px
+$border-radius-2xl: 2.4rem; // 24px
+$border-radius-full: 9999px; // 완전 둥근 모서리
+
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+// 6. 애니메이션
+$transition-fast: 150ms ease;
+$transition-normal: 300ms ease;
+$transition-slow: 500ms ease;
+
+// 7. Z-인덱스
+$z-index-base: 1;
+$z-index-dropdown: 10;
+$z-index-sticky: 20;
+$z-index-fixed: 30;
+$z-index-modal: 40;
+$z-index-popover: 50;
+$z-index-tooltip: 60;
+
+// 8. 미디어 쿼리 브레이크포인트
+$screen-sm: 576px;
+$screen-md: 768px;
+$screen-lg: 992px;
+$screen-xl: 1200px;
+
+// 9. 카드 스타일
+$card-padding: $spacing-xl;
+$card-shadow: $shadow-md;
+$card-border-radius: $border-radius-lg;

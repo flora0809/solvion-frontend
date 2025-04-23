@@ -1,0 +1,176 @@
+/* src/app/globals.scss */
+@import "@/css/_variables";
+@import "@/css/_reset";
+@import "@/css/_button";
+@import "@/css/_components";
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: $bg-dark;
+  background-image: url("/images/bg_grd.svg");
+  background-position: top left;
+  background-repeat: no-repeat;
+  background-size: cover;
+  max-width: $max-width;
+  margin: 0 auto;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  padding: $spacing-lg;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1; /* 배경 이미지 위에 콘텐츠 표시 */
+}
+
+/* 웹 브라우저에서 볼 때 어두운 배경으로 콘텐츠 중앙 정렬 */
+@media (min-width: #{($screen-md + 1px)}) {
+  body {
+    background-color: darken(#000, 5%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .app-container {
+    box-shadow: $shadow-xl;
+    margin-top: 0;
+    border-radius: 0;
+    min-height: 100vh;
+    width: 100%;
+    max-width: $max-width;
+    border-right: 1px solid #333;
+    border-left: 1px solid #333;
+  }
+
+  .main-content {
+    padding: $spacing-xl;
+  }
+}
+
+// 헤더 스타일
+.header {
+  width: 100%;
+  z-index: $z-index-fixed;
+  position: relative;
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-md $spacing-xl;
+    height: 6rem;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  .logo {
+    width: 12.1rem;
+    height: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-image {
+    border-radius: 50%;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  .icon-button {
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color $transition-fast;
+
+    &:hover,
+    &:focus {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+@media (min-width: #{($screen-md + 1px)}) {
+  .header-content {
+    padding: $spacing-md $spacing-2xl;
+  }
+}
+
+// 하단 탭 네비게이션
+.bottom-tab {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: $max-width;
+  height: 8rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $border-radius-lg $border-radius-lg 0 0;
+  z-index: $z-index-fixed;
+
+  .tab-item {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: $text-secondary;
+    transition: color $transition-fast;
+
+    &.active {
+      color: $text-primary;
+    }
+
+    .tab-icon {
+      margin-bottom: $spacing-xs;
+    }
+  }
+
+  .tab-item-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .tab-icon-center {
+      width: 5.6rem;
+      height: 5.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-bottom: 1.2rem;
+      background-color: $primary;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+@media (min-width: #{($screen-md + 1px)}) {
+  .bottom-tab {
+    border-right: 1px solid #333;
+  }
+}
