@@ -1,0 +1,402 @@
+/* src/css/components/_historylist.scss */
+@import "../variables";
+
+.history-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+
+  // 타이틀 전용 박스 (메인 페이지)
+  .title-box {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  // 캘린더 전용 박스 (내역 페이지)
+  .calendar-box {
+    background-color: $bg-card;
+    border-radius: $border-radius-md;
+    padding: $spacing-md $spacing-lg;
+    margin-bottom: $spacing-md;
+  }
+
+  // 내용 박스 (캘린더 + 내역 리스트)
+  .content-box {
+    background-color: $bg-card;
+    border-radius: $border-radius-lg $border-radius-lg 0 0;
+    padding: $spacing-xl $spacing-xl $spacing-3xl;
+  }
+
+  // 헤더 (타이틀과 필터링 옵션)
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 $spacing-sm;
+
+    .history-title {
+      font-size: $font-lg;
+      font-weight: $weight-semibold;
+      color: $text-primary;
+
+      @media (min-width: #{($screen-md + 1px)}) {
+        font-size: $font-xl;
+        font-weight: $weight-medium;
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+    }
+  }
+
+  // 미니 캘린더 컴포넌트
+  .mini-calendar {
+    margin-bottom: $spacing-lg;
+    position: relative;
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-xl;
+
+      // 월 선택 트리거 래퍼
+      .month-selector-trigger {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        gap: $spacing-sm;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-lg;
+        transition: background-color $transition-fast;
+
+        &:hover {
+          background-color: rgba($primary, 0.1);
+        }
+
+        // 드롭다운 화살표
+        .dropdown-arrow {
+          transition: transform $transition-fast;
+        }
+
+        // 활성화 상태일 때 화살표 회전
+        &:active .dropdown-arrow {
+          transform: rotate(180deg);
+        }
+      }
+
+      .month-display {
+        font-family: $font-en-primary;
+        font-size: $font-xl;
+        font-weight: $weight-semibold;
+        color: $primary; // 골드 색상
+        transition: all $transition-fast;
+      }
+    }
+
+    // 월 선택 모달
+    .month-selector {
+      position: absolute;
+      top: 4.5rem;
+      left: 0;
+      right: 0;
+      background-color: rgba($bg-dark, 0.7); // 반투명 검정 배경
+
+      /* 
+    먼저 4개의 코너 radial-gradient 을 맨 위에,
+    그 다음에 반투명 배경색을 아래에 둡니다.
+  */
+      background: radial-gradient(
+          circle at top left,
+          rgba(#44473a, 0.4) 0%,
+          transparent 70%
+        ),
+        radial-gradient(
+          circle at top right,
+          rgba(#44473a, 0.4) 0%,
+          transparent 70%
+        ),
+        radial-gradient(
+          circle at bottom right,
+          rgba(#1a1b1b, 0.4) 0%,
+          transparent 70%
+        ),
+        radial-gradient(
+          circle at bottom left,
+          rgba(#1a1b1b, 0.4) 0%,
+          transparent 70%
+        ),
+        rgba($bg-dark, 0.9);
+
+      /* 전체 크기에 꽉 채우기 */
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      border-radius: $border-radius-lg;
+      box-shadow: $shadow-md;
+      padding: $spacing-md;
+      z-index: $z-index-dropdown;
+      border: 1px solid rgba($primary, 0.5);
+
+      .month-selector-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: $spacing-md;
+
+        .current-year {
+          font-family: $font-en-primary;
+          font-size: $font-lg;
+          font-weight: $weight-medium;
+          color: $text-primary;
+        }
+      }
+
+      .month-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: $spacing-md;
+
+        .month-btn {
+          background: transparent;
+          border: none;
+          color: $text-secondary;
+          padding: $spacing-sm $spacing-md;
+          border-radius: $border-radius-lg;
+          font-family: $font-en-secondary;
+          font-size: $font-xs;
+          transition: all $transition-fast;
+
+          @media (min-width: #{($screen-md + 1px)}) {
+            font-size: $font-sm;
+          }
+
+          &:hover {
+            background-color: rgba($primary, 0.1);
+          }
+
+          &.selected {
+            background-color: $primary;
+            color: $text-dark;
+            font-weight: $weight-semibold;
+          }
+        }
+      }
+    }
+
+    .weekdays-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: $spacing-md;
+
+      .weekday {
+        width: calc(100% / 7);
+        text-align: center;
+        color: $text-muted;
+        font-size: $font-sm;
+        font-weight: $weight-regular;
+        font-family: $font-en-secondary;
+        transition: color $transition-fast;
+
+        &.selected {
+          color: $text-primary;
+          font-weight: $weight-semibold;
+        }
+      }
+    }
+
+    .days-row {
+      display: flex;
+      justify-content: space-between;
+
+      .day-button {
+        position: relative;
+        width: calc(100% / 7);
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: $font-en-secondary;
+        font-size: $font-sm;
+        font-weight: $weight-medium;
+        color: $text-secondary;
+        background: transparent;
+        border: none;
+        transition: all $transition-fast;
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 49%;
+          left: 49%;
+          transform: translate(-50%, -50%);
+          width: 3.6rem;
+          height: 3.6rem;
+          border-radius: 50%;
+        }
+
+        &:hover::after {
+          background-color: rgba($primary, 0.1);
+        }
+
+        &.selected {
+          color: $text-primary;
+          font-weight: $weight-bold;
+
+          &::after {
+            border: 2px solid $primary;
+            background-color: transparent;
+          }
+        }
+      }
+    }
+  }
+
+  // 상단 필터링 영역
+  .filter-options {
+    display: flex;
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+    padding: $spacing-sm 0;
+    overflow-x: auto;
+    scrollbar-width: none; // Firefox
+    -ms-overflow-style: none; // IE/Edge
+
+    &::-webkit-scrollbar {
+      display: none; // Chrome/Safari/Opera
+    }
+
+    .filter-chip {
+      background-color: rgba($bg-dark, 0.3);
+      color: $text-secondary;
+      padding: $spacing-sm $spacing-md;
+      border-radius: $border-radius-full;
+      font-size: $font-sm;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all $transition-fast;
+
+      &.active {
+        background-color: $primary;
+        color: $text-dark;
+      }
+
+      &:hover {
+        background-color: rgba($primary, 0.2);
+      }
+    }
+  }
+
+  // 내역 아이템 목록
+  .history-items {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  // 개별 내역 아이템
+  .history-item {
+    display: flex;
+    align-items: center;
+    padding: $spacing-md;
+    background-color: rgba($bg-dark, 0.3);
+    border-radius: $border-radius-lg;
+    transition: transform $transition-fast;
+    user-select: none;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    .item-icon {
+      width: 4.8rem;
+      height: 4.8rem;
+      border-radius: $border-radius-md;
+      background-color: $bg-light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: $spacing-md;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .item-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .amount-value {
+      font-family: $font-en-primary;
+      font-size: $font-lg;
+      font-weight: $weight-medium;
+      margin-bottom: 0.4rem;
+      white-space: nowrap;
+
+      &.credit {
+        color: $text-primary;
+      }
+
+      &.debit {
+        color: $secondary;
+      }
+    }
+
+    .item-title {
+      font-size: $font-sm;
+      color: $text-secondary;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  // 내역이 없을 때 표시
+  .no-history {
+    text-align: center;
+    padding: $spacing-xl 0;
+    color: $text-secondary;
+    font-size: $font-md;
+  }
+}
+
+// SVG 버튼 스타일 (재사용 가능한 SVG 아이콘 버튼)
+.svg-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all $transition-fast;
+  padding: $spacing-xs;
+  border-radius: $border-radius-full;
+  color: $text-secondary;
+
+  &.svg-btn-default:hover {
+    background-color: rgba($text-primary, 0.1);
+    color: $text-primary;
+  }
+
+  &.svg-btn-accent {
+    color: $primary;
+
+    &:hover {
+      background-color: rgba($primary, 0.1);
+    }
+  }
+
+  &.svg-btn-sm {
+    padding: $spacing-xs;
+
+    svg {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+  }
+}

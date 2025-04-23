@@ -146,34 +146,40 @@ export default function PointCard({
   return (
     <div className="qr-card-wrapper">
       <div className="qr-card">
-        <div className="card-header">
-          <h2 className="card-title">솔비온 포인트</h2>
-        </div>
-
-        {/* 포인트 표시 영역 */}
-        <div className="card-points">
-          <h3 className="points-value">{points}</h3>
-          <div className="points-badge">
-            <span>P</span>
-          </div>
-        </div>
-
-        {/* QR 코드 컨테이너 - 홈 화면에서만 표시 */}
-        {variant === "home" && (
-          <Link href={qrLinkPath} className="qr-container">
-            <div className="qr-wrapper">
-              <QRCode
-                value={qrValue}
-                size={qrSize}
-                level="M"
-                fgColor="#000"
-                bgColor="#fff"
-              />
+        {/* 상단 영역: 타이틀/포인트와 QR 코드를 감싸는 플렉스 컨테이너 */}
+        <div className="card-top-section">
+          {/* 포인트 표시 영역 */}
+          <div className="points-info-box">
+            <div className="card-header">
+              <h2 className="card-title">솔비온 포인트</h2>
             </div>
-          </Link>
-        )}
+            <div className="card-points">
+              <h3 className="points-value">{points}</h3>
+              <div className="points-badge">
+                <span>P</span>
+              </div>
+            </div>
+          </div>
 
-        {/* 바코드 영역 - 홈 화면에서만 표시 */}
+          {/* QR 코드 영역 */}
+          {variant === "home" && (
+            <div className="qr-area">
+              <Link href={qrLinkPath} className="qr-container">
+                <div className="qr-wrapper">
+                  <QRCode
+                    value={qrValue}
+                    size={qrSize}
+                    level="M"
+                    fgColor="#000"
+                    bgColor="#fff"
+                  />
+                </div>
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* 바코드 영역 */}
         {variant === "home" && (
           <div className="barcode-container">
             <div

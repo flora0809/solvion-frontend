@@ -76,3 +76,10 @@ img {
   -webkit-mask-image: -webkit-radial-gradient(white, black);
   -webkit-backface-visibility: hidden;
 }
+
+// 뿌애보이는 이미지
+.svg-fix {
+  image-rendering: -webkit-optimize-contrast;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}

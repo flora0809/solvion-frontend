@@ -12,8 +12,8 @@ export default function Header() {
               src="/images/logo_w.svg"
               alt="Solvion Logo"
               width={120}
-              height={24}
-              className="logo-svg"
+              height={25}
+              className="logo-svg svg-fix"
               priority
             />
           </h1>

@@ -1,44 +1,57 @@
-/* src/css/_button.scss */
-@import "variables";
-
-/* 기본 버튼 스타일 */
-.btn {
+/* SVG 버튼 공통 스타일 - 특수성 높임 */
+body .svg-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: $spacing-md $spacing-xl;
-  border-radius: $border-radius-full;
-  font-weight: $weight-medium;
-  font-size: $font-md;
-  text-align: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  cursor: pointer;
   transition: all $transition-fast;
+  background-color: transparent;
+  padding: 0;
   position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 5.2rem;
 
-  /* 아이콘이 있는 경우 간격 조정 */
-  &.btn-with-icon {
+  /* 아이콘 텍스트와 함께 있는 경우 (필터 버튼 등) */
+  &.with-text {
+    border-radius: $border-radius-md;
+    padding: $spacing-sm $spacing-md;
     gap: $spacing-sm;
+    width: auto;
+    height: auto;
+    font-size: $font-sm;
+  }
 
-    svg {
-      width: 2rem;
-      height: 2rem;
-      flex-shrink: 0;
-    }
+  /* 호버 효과 - 배경색 약간 변경 */
+  &:hover,
+  &:focus {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  /* 활성화 상태 */
+  &:active {
+    transform: scale(0.95);
   }
 
   /* 버튼 크기 변형 */
-  &.btn-sm {
-    font-size: $font-sm;
-    padding: $spacing-sm $spacing-lg;
-    height: 4rem;
+  &.svg-btn-sm {
+    width: 3.2rem;
+    height: 3.2rem;
+
+    svg {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
   }
 
-  &.btn-lg {
-    font-size: $font-lg;
-    padding: $spacing-lg $spacing-xl;
-    height: 6rem;
+  &.svg-btn-lg {
+    width: 4.8rem;
+    height: 4.8rem;
+
+    svg {
+      width: 2.8rem;
+      height: 2.8rem;
+    }
   }
 
   /* 비활성화 상태 */
@@ -50,175 +63,105 @@
   }
 }
 
-/* 기본 버튼 - 골드 */
-.btn-primary {
-  background-color: $bg-btn;
-  color: $text-dark;
-  box-shadow: 0 4px 10px rgba($primary, 0.3);
+/* SVG 버튼 1 (강조 버튼) - 항상 강조 색상 적용 */
+body .svg-btn-accent {
+  svg {
+    circle,
+    path:not([fill]),
+    rect,
+    line,
+    polyline,
+    polygon:not([fill]) {
+      stroke: $btn-stock !important; // 외곽선 색상
+    }
 
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: lighten($bg-btn, 5%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba($primary, 0.4);
+    path[fill],
+    rect[fill],
+    circle[fill],
+    polygon[fill] {
+      fill: $bg-btn !important; // 내부 채우기 색상
+    }
   }
 }
 
-/* 보조 버튼 - 아웃라인 */
-.btn-secondary {
-  background-color: transparent;
-  color: $text-primary;
-  border: 1px solid rgba($text-primary, 0.2);
+/* SVG 버튼 2 (기본 버튼) - 호버 시 아이콘 내부 색상만 변경 */
+body .svg-btn-default {
+  svg {
+    circle,
+    path:not([fill]),
+    rect,
+    line,
+    polyline,
+    polygon:not([fill]) {
+      stroke: $text-muted; // 기본 Stroke 색상
+    }
 
+    path[fill],
+    rect[fill],
+    circle[fill],
+    polygon[fill] {
+      fill: $text-secondary; // 기본 내부 아이콘 색상
+      transition: fill $transition-fast;
+    }
+  }
+
+  /* 호버 시 색상 변경 */
   &:hover,
   &:focus,
   &:active {
-    border-color: rgba($text-primary, 0.5);
-    background-color: rgba($text-primary, 0.05);
+    svg {
+      circle,
+      path:not([fill]),
+      rect,
+      line,
+      polyline,
+      polygon:not([fill]) {
+        stroke: $btn-stock; // 호버 Stroke 색상
+      }
+
+      path[fill],
+      rect[fill],
+      circle[fill],
+      polygon[fill] {
+        fill: $bg-btn; // 호버 내부 아이콘 색상
+        transition: fill $transition-fast;
+      }
+    }
   }
 }
 
-/* 강조 버튼 - 주황색 */
-.btn-accent {
-  background-color: $secondary;
-  color: $text-primary;
-  box-shadow: 0 4px 10px rgba($secondary, 0.3);
-
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: lighten($secondary, 5%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba($secondary, 0.4);
-  }
-}
-
-/* 텍스트 버튼 */
-.btn-text {
-  background-color: transparent;
-  color: $text-highlight;
-  padding: $spacing-sm;
-  height: auto;
-
-  &:hover,
-  &:focus,
-  &:active {
-    text-decoration: underline;
-    background-color: rgba($text-highlight, 0.05);
-  }
-}
-
-/* 아이콘 버튼 - 원형 */
-.btn-icon {
-  width: 4.8rem;
-  height: 4.8rem;
-  padding: 0;
-  border-radius: 50%;
+/* 필터 버튼처럼 텍스트가 있는 경우 */
+body .filter-button {
+  font-size: $font-sm;
+  color: $text-secondary;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: $border-radius-md;
+  transition: all $transition-fast;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: rgba($text-primary, 0.1);
 
   svg {
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    stroke: $text-secondary;
   }
 
   &:hover,
-  &:focus,
-  &:active {
-    background-color: rgba($text-primary, 0.2);
-    transform: scale(1.05);
-  }
-
-  &.btn-sm {
-    width: 3.6rem;
-    height: 3.6rem;
+  &:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: $text-primary;
 
     svg {
-      width: 1.8rem;
-      height: 1.8rem;
-    }
-  }
-
-  &.btn-lg {
-    width: 5.6rem;
-    height: 5.6rem;
-
-    svg {
-      width: 2.8rem;
-      height: 2.8rem;
+      stroke: $bg-btn;
     }
   }
 }
 
-/* 그라데이션 버튼 */
-.btn-gradient {
-  background: linear-gradient(90deg, $gradient-start, $gradient-end);
-  color: $text-dark;
-  font-weight: $weight-semibold;
-  box-shadow: 0 4px 10px rgba($gradient-start, 0.3);
-
-  &:hover,
-  &:focus,
-  &:active {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba($gradient-start, 0.4);
-    background: linear-gradient(
-      90deg,
-      lighten($gradient-start, 5%),
-      lighten($gradient-end, 5%)
-    );
-  }
-}
-
-/* 버튼 그룹 */
-.btn-group {
+/* 네비게이션 버튼 그룹 */
+body .navigation-buttons {
   display: flex;
-  gap: $spacing-md;
-  width: 100%;
-
-  /* 버튼 비율이 같은 경우 */
-  &.btn-group-equal {
-    .btn {
-      flex: 1;
-    }
-  }
-
-  /* 세로 버튼 그룹 */
-  &.btn-group-vertical {
-    flex-direction: column;
-  }
-}
-
-/* 버튼 로딩 상태 */
-.btn-loading {
-  position: relative;
-
-  .spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 2rem;
-    height: 2rem;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 0.8s linear infinite;
-  }
-
-  .btn-text {
-    visibility: hidden;
-  }
-}
-
-@keyframes spin {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
+  gap: $spacing-sm;
+  align-items: center;
 }
