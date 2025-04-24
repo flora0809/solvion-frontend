@@ -3,12 +3,24 @@ import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   webpack(config) {
-    // SVG 파일을 React 컴포넌트로 임포트할 수 있도록 설정
     config.module.rules.push({
       test: /\.svg$/,
-      use: ["@svgr/webpack"],
+      issuer: { and: [/\.(js|ts)x?$/] }, // JS/TS 파일에서 import할 때만 적용
+      use: [
+        {
+          loader: "@svgr/webpack",
+          options: {
+            svgo: true,
+            svgoConfig: {
+              plugins: [
+                { name: "removeViewBox", active: false }, // viewBox는 유지
+                { name: "removeDimensions", active: true }, // width/height 속성 제거
+              ],
+            },
+          },
+        },
+      ],
     })
-
     return config
   },
 }

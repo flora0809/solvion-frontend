@@ -16,6 +16,15 @@ import {
 import { HistoryListProps, HistoryItem } from "@/types/history"
 import Link from "next/link"
 
+// SVG 아이콘 임포트
+import CloseIcon from "@/assets/icons/Close.svg"
+import UpIcon from "@/assets/icons/Up.svg"
+import DownIcon from "@/assets/icons/Down.svg"
+import ArrowLeftIcon from "@/assets/icons/Arrow_L.svg"
+import ArrowRightIcon from "@/assets/icons/Arrow_R.svg"
+import PlusIcon from "@/assets/icons/Plus.svg"
+import FilterIcon from "@/assets/icons/Filter.svg"
+
 // 모달 포털 컴포넌트 - body에 직접 마운트하기 위한 컴포넌트
 const ModalPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // 클라이언트 사이드에서만 렌더링 (Next.js SSR 고려)
@@ -36,7 +45,7 @@ const ModalPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return mounted ? ReactDOM.createPortal(children, document.body) : null
 }
 
-// 모달 컴포넌트 - 타입 수정
+// 모달 컴포넌트
 const MonthSelectorModal: React.FC<{
   isMobile: boolean
   isClosing: boolean
@@ -47,7 +56,7 @@ const MonthSelectorModal: React.FC<{
   onMonthSelect: (month: number) => void
   months: string[]
   date: Date
-  monthSelectorRef: React.RefObject<HTMLDivElement | null> // null 타입 허용
+  monthSelectorRef: React.RefObject<HTMLDivElement | null>
 }> = ({
   isMobile,
   isClosing,
@@ -87,28 +96,9 @@ const MonthSelectorModal: React.FC<{
                 onClick={onClose}
                 aria-label="닫기"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={26}
-                  height={26}
-                  viewBox="0 0 26 26"
-                  fill="none"
-                >
-                  <circle
-                    opacity={0.5}
-                    cx={13.0112}
-                    cy={12.6681}
-                    r={12}
-                    stroke="#CFC5B6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeDasharray="2 4"
-                  />
-                  <path
-                    d="M15.8396 8.42548L13.0112 11.2539L10.1827 8.42548C9.79221 8.03496 9.15904 8.03496 8.76852 8.42548C8.378 8.816 8.378 9.44917 8.76852 9.83969L11.5969 12.6681L8.76852 15.4965C8.378 15.8871 8.378 16.5202 8.76852 16.9108C9.15904 17.3013 9.79221 17.3013 10.1827 16.9108L13.0112 14.0823L15.8396 16.9108C16.2301 17.3013 16.8633 17.3013 17.2538 16.9108C17.6443 16.5202 17.6443 15.8871 17.2538 15.4965L14.4254 12.6681L17.2538 9.83969C17.6443 9.44917 17.6443 8.816 17.2538 8.42548C16.8633 8.03496 16.2301 8.03496 15.8396 8.42548Z"
-                    fill="#B8971D"
-                  />
-                </svg>
+                <div>
+                  <CloseIcon />
+                </div>
               </button>
             </div>
 
@@ -119,19 +109,7 @@ const MonthSelectorModal: React.FC<{
                   onClick={() => onYearChange(1)}
                   aria-label="다음 연도"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="18 15 12 9 6 15"></polyline>
-                  </svg>
+                  <UpIcon className="icon-sm" />
                 </button>
                 <span className="year-display">{selectedYear}</span>
                 <button
@@ -139,19 +117,7 @@ const MonthSelectorModal: React.FC<{
                   onClick={() => onYearChange(-1)}
                   aria-label="이전 연도"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
+                  <DownIcon className="icon-sm" />
                 </button>
               </div>
             </div>
@@ -187,35 +153,23 @@ const MonthSelectorModal: React.FC<{
     >
       <div className="month-selector-header">
         <button
-          className="year-nav prev svg-btn svg-btn-default svg-btn-sm"
+          className="year-nav prev svg-btn svg-btn-default"
           onClick={() => onYearChange(-1)}
           aria-label="이전 년도"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M15 18l-6-6 6-6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <div>
+            <ArrowLeftIcon />
+          </div>
         </button>
         <span className="current-year">{date.getFullYear()}</span>
         <button
-          className="year-nav next svg-btn svg-btn-default svg-btn-sm"
+          className="year-nav next svg-btn svg-btn-default"
           onClick={() => onYearChange(1)}
           aria-label="다음 년도"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M9 18l6-6-6-6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <div>
+            <ArrowRightIcon />
+          </div>
         </button>
       </div>
       <div className="month-grid">
@@ -266,6 +220,9 @@ const HistoryList: React.FC<HistoryListProps> = ({
   const [selectedYear, setSelectedYear] = useState<number>(getYear(date))
   const [selectedMonth, setSelectedMonth] = useState<number>(getMonth(date))
   const monthSelectorRef = useRef<HTMLDivElement>(null)
+
+  // 백업용 상태 추가: 연도 버튼 클릭 시 배경 깜박임 방지
+  const prevYearRef = useRef<number>(selectedYear)
 
   // showMonthSelector가 false가 될 때만 isInitialRender를 false로 설정
   useEffect(() => {
@@ -319,6 +276,9 @@ const HistoryList: React.FC<HistoryListProps> = ({
     // 선택된 년/월 동기화
     setSelectedYear(getYear(date))
     setSelectedMonth(getMonth(date))
+
+    // 연도 참조 업데이트
+    prevYearRef.current = getYear(date)
   }, [date])
 
   // 모달 클로징 애니메이션 처리
@@ -403,10 +363,18 @@ const HistoryList: React.FC<HistoryListProps> = ({
     handleMonthChange(selectedYear, month)
   }
 
-  // 연도 선택 핸들러
+  // 연도 선택 핸들러 - 수정: 배경 깜박임 방지
   const handleYearChange = (yearDiff: number) => {
     triggerHaptic()
-    setSelectedYear((prev) => prev + yearDiff)
+
+    // 이전 연도 값 백업
+    const newYear = selectedYear + yearDiff
+
+    // 상태 업데이트 전에 참조 값 변경
+    prevYearRef.current = newYear
+
+    // 새로운 연도값으로 상태 업데이트
+    setSelectedYear(newYear)
 
     // 모바일에서는 연도만 변경
     if (!isMobile) {
@@ -474,46 +442,17 @@ const HistoryList: React.FC<HistoryListProps> = ({
         {/* 더보기 버튼 - SVG 버튼 스타일 적용 */}
         {pageType === "main" && (
           <Link href="/history" className="svg-btn svg-btn-accent">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="26"
-              viewBox="0 0 25 26"
-              fill="none"
-            >
-              <circle
-                opacity={0.5}
-                cx={12.5}
-                cy={13}
-                r={12}
-                stroke="#CFC5B6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="2 4"
-              />
-              <path
-                d="M17.5 12H13.5V8C13.5 7.44772 13.0523 7 12.5 7C11.9477 7 11.5 7.44772 11.5 8V12H7.5C6.94772 12 6.5 12.4477 6.5 13C6.5 13.5523 6.94772 14 7.5 14H11.5V18C11.5 18.5523 11.9477 19 12.5 19C13.0523 19 13.5 18.5523 13.5 18V14H17.5C18.0523 14 18.5 13.5523 18.5 13C18.5 12.4477 18.0523 12 17.5 12Z"
-                fill="#b8971d"
-              />
-            </svg>
+            <div>
+              <PlusIcon />
+            </div>
           </Link>
         )}
         {showFilter && (
           <button className="filter-button svg-btn svg-btn-default">
             필터
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-            </svg>
+            <div>
+              <FilterIcon />
+            </div>
           </button>
         )}
       </div>
@@ -530,22 +469,11 @@ const HistoryList: React.FC<HistoryListProps> = ({
             {months[date.getMonth()]} {date.getFullYear()}
           </div>
           {/* 하단 화살표 추가 */}
-          <svg
+          <div
             className={`dropdown-arrow ${showMonthSelector ? "active" : ""}`}
-            xmlns="http://www.w3.org/2000/svg"
-            width="12"
-            height="6"
-            viewBox="0 0 12 6"
-            fill="none"
           >
-            <path
-              d="M1 1L6 5L11 1"
-              stroke="#9e831e"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+            <DownIcon />
+          </div>
         </div>
         <div className="navigation-buttons">
           {/* 이전 주 버튼 - SVG 버튼 스타일 적용 */}
@@ -554,34 +482,9 @@ const HistoryList: React.FC<HistoryListProps> = ({
             onClick={goToPreviousWeek}
             aria-label="이전 주"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={26}
-              height={26}
-              viewBox="0 0 26 26"
-              fill="none"
-            >
-              <g clipPath="url(#clip0_146_249)">
-                <path
-                  d="M25 13C25 6.37258 19.6274 1 13 1C6.37258 1 1 6.37258 1 13C1 19.6274 6.37258 25 13 25C19.6274 25 25 19.6274 25 13Z"
-                  stroke="#666562"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeDasharray="2 4"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M15.5303 18.5303C15.8232 18.2374 15.8232 17.7626 15.5303 17.4697L11.0607 13L15.5303 8.53033C15.8232 8.23744 15.8232 7.76256 15.5303 7.46967C15.2374 7.17678 14.7626 7.17678 14.4697 7.46967L9.46967 12.4697C9.17678 12.7626 9.17678 13.2374 9.46967 13.5303L14.4697 18.5303C14.7626 18.8232 15.2374 18.8232 15.5303 18.5303Z"
-                  fill="#92918F"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_146_249">
-                  <rect width={26} height={26} fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
+            <div>
+              <ArrowLeftIcon />
+            </div>
           </button>
           {/* 다음 주 버튼 - SVG 버튼 스타일 적용 */}
           <button
@@ -589,39 +492,14 @@ const HistoryList: React.FC<HistoryListProps> = ({
             onClick={goToNextWeek}
             aria-label="다음 주"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={26}
-              height={26}
-              viewBox="0 0 26 26"
-              fill="none"
-            >
-              <g clipPath="url(#clip0_146_249)">
-                <path
-                  d="M25 13C25 6.37258 19.6274 1 13 1C6.37258 1 1 6.37258 1 13C1 19.6274 6.37258 25 13 25C19.6274 25 25 19.6274 25 13Z"
-                  stroke="#666562"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeDasharray="2 4"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M10.4697 7.46967C10.1768 7.76256 10.1768 8.23744 10.4697 8.53033L14.9393 13L10.4697 17.4697C10.1768 17.7626 10.1768 18.2374 10.4697 18.5303C10.7626 18.8232 11.2374 18.8232 11.5303 18.5303L16.5303 13.5303C16.8232 13.2374 16.8232 12.7626 16.5303 12.4697L11.5303 7.46967C11.2374 7.17678 10.7626 7.17678 10.4697 7.46967Z"
-                  fill="#92918F"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_146_249">
-                  <rect width={26} height={26} fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
+            <div>
+              <ArrowRightIcon />
+            </div>
           </button>
         </div>
       </div>
 
-      {/* 모달 렌더링 - React Portal 사용, 타입 수정 */}
+      {/* 모달 렌더링 - React Portal 사용 */}
       {(showMonthSelector || isClosingModal) && (
         <MonthSelectorModal
           isMobile={isMobile}

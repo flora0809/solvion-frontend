@@ -1,0 +1,12 @@
+// _mixins.scss
+
+@mixin icon-size($size) {
+  display: inline-block;
+  width: $size;
+  height: $size;
+  svg {
+    width: 100% !important;
+    height: 100% !important;
+    color: currentColor !important;
+  }
+}

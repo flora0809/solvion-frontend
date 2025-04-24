@@ -1,3 +1,254 @@
+/* src/css/_button.scss */
+
+/* 기본 버튼 스타일 */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-full;
+  font-size: $font-lg;
+  font-weight: $weight-medium;
+  transition: all $transition-fast;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 5.4rem;
+  border: 1px solid rgba($text-primary, 0.2);
+
+  /* 아이콘이 있는 경우 간격 조정 */
+  &.btn-with-icon {
+    gap: $spacing-sm;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+      flex-shrink: 0;
+    }
+  }
+
+  /* 버튼 크기 변형 */
+  &.btn-sm {
+    font-size: $font-sm;
+    padding: $spacing-sm $spacing-lg;
+    height: 4rem;
+  }
+
+  &.btn-lg {
+    font-size: $font-lg;
+    padding: $spacing-lg $spacing-xl;
+    height: 6rem;
+  }
+
+  /* 비활성화 상태 */
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* 물결 효과 (터치 인터랙션) */
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.2) 10%,
+      transparent 10.01%
+    );
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.8s;
+  }
+
+  &:active::after {
+    transform: scale(0, 0);
+    opacity: 0.3;
+    transition: 0s;
+  }
+}
+
+/* 기본 버튼 - 골드 */
+.btn-primary {
+  background-color: $bg-btn;
+  color: $text-dark;
+  box-shadow: 0 4px 10px rgba($primary, 0.3);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: lighten($bg-btn, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba($primary, 0.4);
+  }
+}
+
+/* 보조 버튼 - 아웃라인 */
+.btn-secondary {
+  background-color: transparent;
+  color: $text-primary;
+  border: 1px solid rgba($text-primary, 0.2);
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: rgba($text-primary, 0.5);
+    background-color: rgba($text-primary, 0.05);
+  }
+}
+
+/* 강조 버튼 - 주황색 */
+.btn-accent {
+  background-color: $secondary;
+  color: $text-primary;
+  box-shadow: 0 4px 10px rgba($secondary, 0.3);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: lighten($secondary, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba($secondary, 0.4);
+  }
+}
+
+/* 텍스트 버튼 */
+.btn-text {
+  background-color: transparent;
+  color: $text-highlight;
+  padding: $spacing-sm;
+  height: auto;
+
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: underline;
+    background-color: rgba($text-highlight, 0.05);
+  }
+}
+
+/* 아이콘 버튼 - 원형 */
+.btn-icon {
+  width: 4.8rem;
+  height: 4.8rem;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba($text-primary, 0.1);
+
+  svg {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: rgba($text-primary, 0.2);
+    transform: scale(1.05);
+  }
+
+  &.btn-sm {
+    width: 3.6rem;
+    height: 3.6rem;
+
+    svg {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+  }
+
+  &.btn-lg {
+    width: 5.6rem;
+    height: 5.6rem;
+
+    svg {
+      width: 2.8rem;
+      height: 2.8rem;
+    }
+  }
+}
+
+/* 그라데이션 버튼 */
+.btn-gradient {
+  background: linear-gradient(90deg, $gradient-start, $gradient-end);
+  color: $text-dark;
+  font-weight: $weight-semibold;
+  box-shadow: 0 4px 10px rgba($gradient-start, 0.3);
+
+  &:hover,
+  &:focus,
+  &:active {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba($gradient-start, 0.4);
+    background: linear-gradient(
+      90deg,
+      lighten($gradient-start, 5%),
+      lighten($gradient-end, 5%)
+    );
+  }
+}
+
+/* 버튼 그룹 */
+.btn-group {
+  display: flex;
+  gap: $spacing-md;
+  width: 100%;
+
+  /* 버튼 비율이 같은 경우 */
+  &.btn-group-equal {
+    .btn {
+      flex: 1;
+    }
+  }
+
+  /* 세로 버튼 그룹 */
+  &.btn-group-vertical {
+    flex-direction: column;
+  }
+}
+
+/* 버튼 로딩 상태 */
+.btn-loading {
+  position: relative;
+
+  .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .btn-text {
+    visibility: hidden;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
 /* SVG 버튼 공통 스타일 - 특수성 높임 */
 body .svg-btn {
   display: flex;
@@ -12,6 +263,30 @@ body .svg-btn {
   padding: 0;
   position: relative;
 
+  /* 점선 원형 테두리 스타일 */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    border: 1px dashed $btn-stock;
+    opacity: 0.5;
+    pointer-events: none;
+    border-style: dashed;
+    border-width: 1px;
+  }
+
+  /* 내부 아이콘 스타일링 */
+  > div {
+    @include icon-size($icon-size-xs);
+    color: $text-secondary;
+    transition: color $transition-fast;
+  }
+
   /* 아이콘 텍스트와 함께 있는 경우 (필터 버튼 등) */
   &.with-text {
     border-radius: $border-radius-md;
@@ -20,6 +295,16 @@ body .svg-btn {
     width: auto;
     height: auto;
     font-size: $font-sm;
+
+    &::before {
+      border-radius: $border-radius-md;
+      width: 100%;
+      height: 100%;
+    }
+
+    > div {
+      @include icon-size($icon-size-sm);
+    }
   }
 
   /* 호버 효과 - 배경색 약간 변경 */
@@ -38,9 +323,8 @@ body .svg-btn {
     width: 3.2rem;
     height: 3.2rem;
 
-    svg {
-      width: 1.8rem;
-      height: 1.8rem;
+    > div {
+      @include icon-size($icon-size-sm);
     }
   }
 
@@ -48,9 +332,8 @@ body .svg-btn {
     width: 4.8rem;
     height: 4.8rem;
 
-    svg {
-      width: 2.8rem;
-      height: 2.8rem;
+    > div {
+      @include icon-size($icon-size-lg);
     }
   }
 
@@ -65,68 +348,65 @@ body .svg-btn {
 
 /* SVG 버튼 1 (강조 버튼) - 항상 강조 색상 적용 */
 body .svg-btn-accent {
-  svg {
-    circle,
-    path:not([fill]),
-    rect,
-    line,
-    polyline,
-    polygon:not([fill]) {
-      stroke: $btn-stock !important; // 외곽선 색상
+  &::before {
+    border-color: $btn-stock;
+  }
+
+  > div {
+    color: $primary;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: rgba(255, 255, 255, 0.1);
+
+    &::before {
+      opacity: 0.7;
+      border-color: lighten($btn-stock, 10%);
     }
 
-    path[fill],
-    rect[fill],
-    circle[fill],
-    polygon[fill] {
-      fill: $bg-btn !important; // 내부 채우기 색상
+    > div {
+      color: lighten($primary, 10%);
     }
   }
 }
 
 /* SVG 버튼 2 (기본 버튼) - 호버 시 아이콘 내부 색상만 변경 */
 body .svg-btn-default {
-  svg {
-    circle,
-    path:not([fill]),
-    rect,
-    line,
-    polyline,
-    polygon:not([fill]) {
-      stroke: $text-muted; // 기본 Stroke 색상
-    }
+  &::before {
+    border-color: $text-muted;
+  }
 
-    path[fill],
-    rect[fill],
-    circle[fill],
-    polygon[fill] {
-      fill: $text-secondary; // 기본 내부 아이콘 색상
-      transition: fill $transition-fast;
-    }
+  > div {
+    color: $text-muted;
   }
 
   /* 호버 시 색상 변경 */
   &:hover,
   &:focus,
   &:active {
-    svg {
-      circle,
-      path:not([fill]),
-      rect,
-      line,
-      polyline,
-      polygon:not([fill]) {
-        stroke: $btn-stock; // 호버 Stroke 색상
-      }
-
-      path[fill],
-      rect[fill],
-      circle[fill],
-      polygon[fill] {
-        fill: $bg-btn; // 호버 내부 아이콘 색상
-        transition: fill $transition-fast;
-      }
+    &::before {
+      opacity: 0.7;
+      border-color: $btn-stock;
     }
+
+    > div {
+      color: $primary;
+    }
+  }
+}
+
+/* 플러스 버튼 (추가 효과) */
+body .svg-btn-plus {
+  &::before {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-color: $btn-stock;
+  }
+
+  > div {
+    color: $primary;
   }
 }
 
@@ -142,10 +422,13 @@ body .filter-button {
   display: flex;
   align-items: center;
 
-  svg {
-    width: 1.6rem;
-    height: 1.6rem;
-    stroke: $text-secondary;
+  &::before {
+    border-radius: $border-radius-md;
+  }
+
+  > div {
+    @include icon-size($icon-size-sm);
+    color: $text-muted;
   }
 
   &:hover,
@@ -153,8 +436,8 @@ body .filter-button {
     background-color: rgba(255, 255, 255, 0.1);
     color: $text-primary;
 
-    svg {
-      stroke: $bg-btn;
+    > div {
+      color: $primary;
     }
   }
 }
@@ -164,4 +447,103 @@ body .navigation-buttons {
   display: flex;
   gap: $spacing-sm;
   align-items: center;
+}
+
+/* 드롭다운 화살표 애니메이션 */
+.dropdown-arrow {
+  @include icon-size($icon-size-xs);
+  transition: transform $transition-fast;
+  transform-origin: center;
+
+  &.active {
+    transform: rotate(180deg);
+  }
+}
+
+/* 하단 고정 버튼 컨테이너 */
+.fixed-bottom-button-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: $max-width;
+  padding: $spacing-md $spacing-xl $spacing-xl;
+  background: linear-gradient(to top, rgba($bg-dark, 1) 80%, rgba($bg-dark, 0));
+  z-index: $z-index-fixed;
+
+  @media (min-width: $screen-md) {
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+  }
+
+  /* 하단 탭이 있는 경우 여백 조정 */
+  &.with-tab {
+    padding-bottom: calc(9rem + #{$spacing-xl});
+  }
+
+  /* 애니메이션 효과 */
+  &.slide-in {
+    animation: slideUp 0.3s ease-out forwards;
+  }
+
+  /* 버튼 컨테이너 */
+  .button-container {
+    width: 100%;
+    display: flex;
+    gap: $spacing-md;
+
+    /* 버튼이 하나인 경우 */
+    &.single-button {
+      .btn {
+        width: 100%;
+      }
+    }
+
+    /* 메인/서브 버튼 조합 */
+    &.main-sub-buttons {
+      .btn-sub {
+        flex: 0.4;
+      }
+
+      .btn-main {
+        flex: 0.6;
+      }
+    }
+
+    /* 동등한 두 버튼 */
+    &.equal-buttons {
+      .btn {
+        flex: 1;
+      }
+    }
+  }
+}
+
+/* 애니메이션 */
+@keyframes slideUp {
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-2px);
+  }
 }

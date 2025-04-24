@@ -1,9 +1,11 @@
 /* src/app/globals.scss */
 @import "@/css/_variables";
 @import "@/css/_reset";
-@import "@/css/_button";
+@import "@/css/_mixins";
 @import "@/css/components/_pointcard";
 @import "@/css/components/_historylist";
+@import "@/css/components/_qrfullscreen"; // QR 풀스크린
+@import "@/css/_button";
 
 .app-container {
   display: flex;
@@ -127,8 +129,16 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
+  // border-top: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: $border-radius-lg $border-radius-lg 0 0;
   z-index: $z-index-fixed;
+  transition: transform 0.3s ease;
+
+  // 스크롤 시 숨김 클래스
+  &.hidden {
+    transform: translate(-50%, 100%);
+    visibility: visible; // 요소는 DOM에 유지하되 화면에서만 사라지게 함
+  }
 
   .tab-item {
     flex: 1;
@@ -146,6 +156,7 @@
 
     .tab-icon {
       margin-bottom: $spacing-xs;
+      @include icon-size($icon-size-md);
     }
   }
 
@@ -167,10 +178,16 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
   }
+
+  .plus-icon {
+    @include icon-size($icon-size-sm);
+    color: $bg-light;
+  }
 }
 
 @media (min-width: #{($screen-md + 1px)}) {
   .bottom-tab {
     border-right: 1px solid #333;
+    border-left: 1px solid #333;
   }
 }

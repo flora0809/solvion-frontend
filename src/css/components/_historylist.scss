@@ -1,5 +1,4 @@
 /* src/css/components/_historylist.scss */
-@import "../variables";
 
 .history-list {
   width: 100%;
@@ -80,7 +79,9 @@
 
         // 드롭다운 화살표
         .dropdown-arrow {
+          @include icon-size($icon-size-xs);
           transition: transform $transition-fast;
+          color: $primary;
 
           &.active {
             transform: rotate(180deg);
@@ -104,6 +105,7 @@
       .navigation-buttons {
         display: flex;
         gap: $spacing-sm;
+        align-items: center;
       }
     }
 
@@ -152,7 +154,7 @@
           content: "";
           position: absolute;
           top: 48%;
-          left: 49%;
+          left: 50%;
           transform: translate(-50%, -50%);
           width: 3rem;
           height: 3rem;
@@ -330,8 +332,8 @@
   top: 4.5rem;
   left: 0;
   right: 0;
-  background-color: rgba($bg-dark, 0.7); // 반투명 검정 배경
-
+  background-color: rgba($bg-dark, 0.9); // 투명도 높임
+  z-index: $z-index-modal;
   /* 그라데이션 배경 효과 */
   background: radial-gradient(
       circle at top left,
@@ -358,7 +360,6 @@
   border-radius: $border-radius-lg;
   box-shadow: $shadow-md;
   padding: $spacing-md;
-  z-index: $z-index-modal;
   border: 1px solid rgba($primary, 0.5);
   animation: fadeIn 0.2s ease-out;
   transform: translateZ(0); // 새로운 stacking context 생성
@@ -458,6 +459,7 @@
   align-items: flex-end;
   animation: fadeIn 0.2s ease-out;
   pointer-events: auto; // 클릭 이벤트 확실히 받도록 설정
+  will-change: opacity; // 성능 최적화
 
   &.closing {
     animation: fadeOut 0.2s ease-out forwards;
@@ -470,37 +472,21 @@
   background-color: $bg-card;
   border-radius: $border-radius-xl $border-radius-xl 0 0;
   padding: $spacing-lg;
-  // 애니메이션 초기 상태 수정
-  transform: translateY(0); // 이미 제자리에 위치
+  transform: translateY(0); // 초기 위치 설정
   max-height: 90vh;
   overflow-y: auto;
   overscroll-behavior: contain; // 오버스크롤 시 바운스 방지 (iOS)
   position: relative;
   z-index: $z-index-modal;
   transform: translateZ(0); // 새로운 stacking context 생성 (GPU 가속)
+  will-change: transform; // 성능 최적화
 
   &.closing {
     animation: slideDown 0.3s ease-out forwards;
   }
 
-  /* 그라데이션 배경 효과 */
-  background: radial-gradient(
-      circle at top left,
-      rgba(#44473a, 0.4) 0%,
-      transparent 70%
-    ),
-    radial-gradient(circle at top right, rgba(#44473a, 0.4) 0%, transparent 70%),
-    radial-gradient(
-      circle at bottom right,
-      rgba(#1a1b1b, 0.4) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      circle at bottom left,
-      rgba(#1a1b1b, 0.4) 0%,
-      transparent 70%
-    ),
-    $bg-card;
+  /* 그라데이션 배경 효과 - 배경 깜박임 방지를 위한 고정 배경 */
+  background: $bg-card;
 
   .bottomsheet-header {
     display: flex;
@@ -511,7 +497,6 @@
   }
 
   .selector-controls {
-    margin-top: $spacing-lg;
     margin-bottom: $spacing-xl;
 
     .year-selector {
@@ -531,10 +516,22 @@
         color: $text-secondary;
         transition: all $transition-fast;
 
+        .icon-sm {
+          @include icon-size($icon-size-xs);
+          color: $text-secondary;
+          transition: color $transition-fast;
+        }
+
         &:hover,
         &:active {
           background-color: rgba($primary, 0.2);
-          color: $primary;
+
+          .icon-sm {
+            color: $primary;
+          }
+        }
+
+        &:active {
           transform: scale(0.95);
         }
       }
@@ -617,46 +614,6 @@
           box-shadow: 0 2px 5px rgba($primary, 0.3);
         }
       }
-    }
-  }
-}
-
-// SVG 버튼 스타일 (재사용 가능한 SVG 아이콘 버튼)
-.svg-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all $transition-fast;
-  padding: $spacing-xs;
-  border-radius: $border-radius-full;
-  color: $text-secondary;
-
-  &.svg-btn-default:hover {
-    background-color: rgba($text-primary, 0.1);
-    color: $text-primary;
-  }
-
-  &:active {
-    transform: scale(0.9);
-  }
-
-  &.svg-btn-accent {
-    color: $primary;
-
-    &:hover {
-      background-color: rgba($primary, 0.1);
-    }
-  }
-
-  &.svg-btn-sm {
-    padding: $spacing-xs;
-
-    svg {
-      width: 1.8rem;
-      height: 1.8rem;
     }
   }
 }

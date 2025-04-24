@@ -1,0 +1,239 @@
+/* src/css/components/_qrfullscreen.scss */
+
+// QR 풀스크린 오버레이
+.qr-fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba($bg-dark, 0.9);
+  z-index: $z-index-modal;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(5px);
+
+  &.closing {
+    animation: fadeOut 0.3s ease forwards;
+  }
+}
+
+// QR 풀스크린 콘텐츠
+.qr-fullscreen-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: $spacing-2xl;
+  width: 100%;
+  max-width: 45rem;
+  padding: $spacing-xl;
+  animation: zoomIn 0.3s ease;
+
+  &.closing {
+    animation: zoomOut 0.3s ease forwards;
+  }
+}
+
+// QR 코드 컨테이너
+.qr-container-large {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 다중 그라데이션 배경 적용 */
+  background: radial-gradient(
+      circle at top left,
+      rgba(#46473a, 0.4) 0%,
+      transparent 70%
+    ),
+    radial-gradient(circle at top right, rgba(#44473a, 0.4) 0%, transparent 70%),
+    radial-gradient(
+      circle at bottom right,
+      rgba(#355030, 0.4) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(#847b68, 0.4) 0%,
+      transparent 70%
+    ),
+    rgba($bg-dark, 0.9);
+
+  border-radius: $border-radius-lg;
+  padding: $spacing-2xl;
+
+  /* 모서리 SVG 위치 지정 */
+  .corner {
+    position: absolute;
+    width: 3.2rem;
+    height: 3.2rem;
+    pointer-events: none;
+  }
+  .corner-tl {
+    top: 0;
+    left: 0;
+    transform: rotate(0deg);
+  }
+  .corner-tr {
+    top: 0;
+    right: 0;
+    transform: rotate(90deg);
+  }
+  .corner-br {
+    bottom: 0;
+    right: 0;
+    transform: rotate(180deg);
+  }
+  .corner-bl {
+    bottom: 0;
+    left: 0;
+    transform: rotate(270deg);
+  }
+
+  /* 스캔 라인 효과 */
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: rgba($secondary, 0.7);
+    animation: scanLine 4s ease-in-out infinite;
+    z-index: 2;
+    box-shadow: 0 0 10px 2px rgba($secondary, 0.5);
+  }
+
+  .qr-code {
+    background-color: $bg-light;
+    padding: 15px;
+    /* QR코드는 둥근 모서리 적용 */
+    border-radius: $border-radius-lg;
+    max-width: 90%;
+    max-height: 90%;
+    z-index: 1;
+  }
+
+  /* 데스크톱에서 더 큰 크기로 표시 */
+  @media (min-width: $screen-md) {
+    width: 350px;
+    height: 350px;
+  }
+}
+
+// 스캐닝 텍스트
+.qr-overlay-status {
+  margin-top: $spacing-md;
+
+  .scanning-text {
+    color: $text-primary;
+    font-family: $font-en-primary;
+    font-size: $font-2xl;
+    font-weight: $weight-regular;
+    animation: pulse 1.5s infinite;
+  }
+}
+
+// 닫기 버튼
+.qr-close-button {
+  width: 100%;
+  max-width: 30rem;
+  background-color: rgba($bg-light, 0.1);
+  color: $text-primary;
+
+  &:hover,
+  &:active {
+    background-color: rgba($bg-light, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// 애니메이션 정의
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes scanLine {
+  0% {
+    top: 0;
+    opacity: 0.7;
+  }
+  50% {
+    top: calc(100% - 2px);
+    opacity: 0.9;
+  }
+  50.1% {
+    opacity: 0;
+  }
+  50.2% {
+    top: 0;
+    opacity: 0;
+  }
+  100% {
+    top: 0;
+    opacity: 0.7;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+// 반응형 조정
+@media (min-width: $screen-md) {
+  .qr-fullscreen-content {
+    gap: $spacing-3xl;
+  }
+}
