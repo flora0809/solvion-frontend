@@ -8,7 +8,7 @@ export interface HistoryItem {
   title: string
   subtitle?: string
   amount: number
-  type: "debit" | "credit" // 출금(사용) 또는 입금(적립)
+  type: "debit" | "credit" // 출금(사용-차변) 또는 입금(적립-대변)
   category?: string
   icon?: string // 아이콘 경로 또는 컴포넌트 이름
 }

@@ -1,7 +1,8 @@
 // src/components/HistoryList.tsx
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
+import ReactDOM from "react-dom"
 import {
   format,
   addDays,
@@ -9,9 +10,233 @@ import {
   isSameDay,
   addWeeks,
   subWeeks,
+  getYear,
+  getMonth,
 } from "date-fns"
 import { HistoryListProps, HistoryItem } from "@/types/history"
 import Link from "next/link"
+
+// 모달 포털 컴포넌트 - body에 직접 마운트하기 위한 컴포넌트
+const ModalPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // 클라이언트 사이드에서만 렌더링 (Next.js SSR 고려)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+
+    // 모달이 열릴 때 body의 스크롤 방지
+    document.body.style.overflow = "hidden"
+
+    // 정리 함수
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [])
+
+  return mounted ? ReactDOM.createPortal(children, document.body) : null
+}
+
+// 모달 컴포넌트 - 타입 수정
+const MonthSelectorModal: React.FC<{
+  isMobile: boolean
+  isClosing: boolean
+  onClose: () => void
+  selectedYear: number
+  selectedMonth: number
+  onYearChange: (diff: number) => void
+  onMonthSelect: (month: number) => void
+  months: string[]
+  date: Date
+  monthSelectorRef: React.RefObject<HTMLDivElement | null> // null 타입 허용
+}> = ({
+  isMobile,
+  isClosing,
+  onClose,
+  selectedYear,
+  selectedMonth,
+  onYearChange,
+  onMonthSelect,
+  months,
+  date,
+  monthSelectorRef,
+}) => {
+  if (isMobile) {
+    return (
+      <ModalPortal>
+        <div
+          className={`month-selector-backdrop ${isClosing ? "closing" : ""}`}
+          onClick={(e) => {
+            // 백드롭 클릭시 닫기 (이벤트 버블링 방지)
+            if (e.target === e.currentTarget) {
+              onClose()
+            }
+          }}
+          style={{ zIndex: 9000 }}
+        >
+          <div
+            className={`month-selector-bottomsheet ${
+              isClosing ? "closing" : ""
+            }`}
+            ref={monthSelectorRef}
+            onClick={(e) => e.stopPropagation()}
+            style={{ zIndex: 9001 }}
+          >
+            <div className="bottomsheet-header">
+              <button
+                className="svg-btn svg-btn-accent"
+                onClick={onClose}
+                aria-label="닫기"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={26}
+                  height={26}
+                  viewBox="0 0 26 26"
+                  fill="none"
+                >
+                  <circle
+                    opacity={0.5}
+                    cx={13.0112}
+                    cy={12.6681}
+                    r={12}
+                    stroke="#CFC5B6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray="2 4"
+                  />
+                  <path
+                    d="M15.8396 8.42548L13.0112 11.2539L10.1827 8.42548C9.79221 8.03496 9.15904 8.03496 8.76852 8.42548C8.378 8.816 8.378 9.44917 8.76852 9.83969L11.5969 12.6681L8.76852 15.4965C8.378 15.8871 8.378 16.5202 8.76852 16.9108C9.15904 17.3013 9.79221 17.3013 10.1827 16.9108L13.0112 14.0823L15.8396 16.9108C16.2301 17.3013 16.8633 17.3013 17.2538 16.9108C17.6443 16.5202 17.6443 15.8871 17.2538 15.4965L14.4254 12.6681L17.2538 9.83969C17.6443 9.44917 17.6443 8.816 17.2538 8.42548C16.8633 8.03496 16.2301 8.03496 15.8396 8.42548Z"
+                    fill="#B8971D"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className="selector-controls">
+              <div className="year-selector">
+                <button
+                  className="year-nav-btn"
+                  onClick={() => onYearChange(1)}
+                  aria-label="다음 연도"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="18 15 12 9 6 15"></polyline>
+                  </svg>
+                </button>
+                <span className="year-display">{selectedYear}</span>
+                <button
+                  className="year-nav-btn"
+                  onClick={() => onYearChange(-1)}
+                  aria-label="이전 연도"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="mobile-month-grid">
+              {months.map((month, index) => (
+                <button
+                  key={month}
+                  className={`mobile-month-btn ${
+                    selectedMonth === index ? "selected" : ""
+                  }`}
+                  onClick={() => {
+                    // 모바일에서 월 클릭 시 바로 적용 및 닫기
+                    onMonthSelect(index)
+                  }}
+                >
+                  {month.substring(0, 3)}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </ModalPortal>
+    )
+  }
+
+  // 데스크톱 버전
+  return (
+    <div
+      className="month-selector"
+      ref={monthSelectorRef}
+      style={{ zIndex: 9000 }}
+    >
+      <div className="month-selector-header">
+        <button
+          className="year-nav prev svg-btn svg-btn-default svg-btn-sm"
+          onClick={() => onYearChange(-1)}
+          aria-label="이전 년도"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M15 18l-6-6 6-6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+        <span className="current-year">{date.getFullYear()}</span>
+        <button
+          className="year-nav next svg-btn svg-btn-default svg-btn-sm"
+          onClick={() => onYearChange(1)}
+          aria-label="다음 년도"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M9 18l6-6-6-6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+      <div className="month-grid">
+        {months.map((month: string, index: number) => (
+          <button
+            key={month}
+            className={`month-btn ${
+              date.getMonth() === index ? "selected" : ""
+            }`}
+            onClick={() => {
+              // 데스크톱에서는 바로 월 변경 및 모달 닫기
+              onMonthSelect(index)
+            }}
+          >
+            {month}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 const HistoryList: React.FC<HistoryListProps> = ({
   items,
@@ -30,6 +255,24 @@ const HistoryList: React.FC<HistoryListProps> = ({
   const [showAllItems, setShowAllItems] = useState<boolean>(false)
   const [currentWeekDays, setCurrentWeekDays] = useState<Date[]>([])
   const [showMonthSelector, setShowMonthSelector] = useState<boolean>(false)
+
+  // 애니메이션 관련 상태 추가
+  const [isClosingModal, setIsClosingModal] = useState<boolean>(false)
+  // 바텀시트 애니메이션 관련 상태 - 마운트시에만 한 번 실행하도록
+  const [isInitialRender, setIsInitialRender] = useState<boolean>(true)
+
+  // 새로 추가된 상태들
+  const [isMobile, setIsMobile] = useState<boolean>(true)
+  const [selectedYear, setSelectedYear] = useState<number>(getYear(date))
+  const [selectedMonth, setSelectedMonth] = useState<number>(getMonth(date))
+  const monthSelectorRef = useRef<HTMLDivElement>(null)
+
+  // showMonthSelector가 false가 될 때만 isInitialRender를 false로 설정
+  useEffect(() => {
+    if (showMonthSelector === false && isInitialRender) {
+      setIsInitialRender(false)
+    }
+  }, [showMonthSelector, isInitialRender])
 
   // 요일 표시
   const weekdays: string[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -50,6 +293,20 @@ const HistoryList: React.FC<HistoryListProps> = ({
     "December",
   ]
 
+  // 모바일 디바이스 체크
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    checkIsMobile()
+    window.addEventListener("resize", checkIsMobile)
+
+    return () => {
+      window.removeEventListener("resize", checkIsMobile)
+    }
+  }, [])
+
   // 현재 주의 날짜들 계산
   useEffect(() => {
     const weekStart = startOfWeek(date, { weekStartsOn: 1 }) // 월요일부터 시작
@@ -58,10 +315,49 @@ const HistoryList: React.FC<HistoryListProps> = ({
       days.push(addDays(weekStart, i))
     }
     setCurrentWeekDays(days)
+
+    // 선택된 년/월 동기화
+    setSelectedYear(getYear(date))
+    setSelectedMonth(getMonth(date))
   }, [date])
+
+  // 모달 클로징 애니메이션 처리
+  useEffect(() => {
+    if (isClosingModal) {
+      const timer = setTimeout(() => {
+        setShowMonthSelector(false)
+        setIsClosingModal(false)
+      }, 300) // 애니메이션 지속 시간
+
+      return () => clearTimeout(timer)
+    }
+  }, [isClosingModal])
+
+  // 햅틱 피드백 함수
+  const triggerHaptic = (pattern: number | number[] = 50) => {
+    if (window.navigator && window.navigator.vibrate) {
+      try {
+        window.navigator.vibrate(pattern)
+      } catch (e) {
+        // 진동 API 지원하지 않는 기기에서 예외 처리
+        console.log("Haptic feedback not supported")
+      }
+    }
+  }
+
+  // 모달 닫기 함수 (애니메이션 포함)
+  const closeMonthSelector = () => {
+    if (isMobile) {
+      triggerHaptic(50)
+      setIsClosingModal(true)
+    } else {
+      setShowMonthSelector(false)
+    }
+  }
 
   // 날짜 변경 핸들러
   const handleDateChange = (newDate: Date) => {
+    triggerHaptic()
     setDate(newDate)
     if (onDateChange) {
       onDateChange(newDate)
@@ -70,6 +366,7 @@ const HistoryList: React.FC<HistoryListProps> = ({
 
   // 이전 주로 이동
   const goToPreviousWeek = () => {
+    triggerHaptic()
     const newDate = subWeeks(date, 1)
     setDate(newDate)
     if (onDateChange) {
@@ -79,6 +376,7 @@ const HistoryList: React.FC<HistoryListProps> = ({
 
   // 다음 주로 이동
   const goToNextWeek = () => {
+    triggerHaptic()
     const newDate = addWeeks(date, 1)
     setDate(newDate)
     if (onDateChange) {
@@ -88,21 +386,57 @@ const HistoryList: React.FC<HistoryListProps> = ({
 
   // 월 선택 핸들러
   const handleMonthChange = (year: number, month: number) => {
+    triggerHaptic([50, 50])
     const newDate = new Date(year, month)
     setDate(newDate)
     if (onDateChange) {
       onDateChange(newDate)
     }
-    setShowMonthSelector(false)
+    closeMonthSelector()
+  }
+
+  // 선택기 내에서 월 선택 핸들러 - 수정된 버전: 클릭 시 바로 적용되도록
+  const handleMonthSelect = (month: number) => {
+    triggerHaptic()
+
+    // 모바일과 데스크톱 모두 동일하게 바로 적용
+    handleMonthChange(selectedYear, month)
+  }
+
+  // 연도 선택 핸들러
+  const handleYearChange = (yearDiff: number) => {
+    triggerHaptic()
+    setSelectedYear((prev) => prev + yearDiff)
+
+    // 모바일에서는 연도만 변경
+    if (!isMobile) {
+      // 데스크톱 모드에서는 연도 변경 즉시 반영
+      const newDate = new Date(date)
+      newDate.setFullYear(date.getFullYear() + yearDiff)
+      setDate(newDate)
+      if (onDateChange) {
+        onDateChange(newDate)
+      }
+    }
   }
 
   // 월 선택 토글
   const toggleMonthSelector = () => {
-    setShowMonthSelector(!showMonthSelector)
+    triggerHaptic()
+
+    if (showMonthSelector) {
+      closeMonthSelector()
+    } else {
+      // 월 선택기가 열릴 때 선택된 년/월 동기화
+      setSelectedYear(getYear(date))
+      setSelectedMonth(getMonth(date))
+      setShowMonthSelector(true)
+    }
   }
 
   // 필터 변경 핸들러
   const handleFilterChange = (filter: string) => {
+    triggerHaptic()
     setActiveFilter(filter)
   }
 
@@ -197,7 +531,7 @@ const HistoryList: React.FC<HistoryListProps> = ({
           </div>
           {/* 하단 화살표 추가 */}
           <svg
-            className="dropdown-arrow"
+            className={`dropdown-arrow ${showMonthSelector ? "active" : ""}`}
             xmlns="http://www.w3.org/2000/svg"
             width="12"
             height="6"
@@ -287,64 +621,20 @@ const HistoryList: React.FC<HistoryListProps> = ({
         </div>
       </div>
 
-      {/* 월 선택 모달 */}
-      {showMonthSelector && (
-        <div className="month-selector">
-          <div className="month-selector-header">
-            <button
-              className="year-nav prev svg-btn svg-btn-default svg-btn-sm"
-              onClick={() => {
-                const newDate = new Date(date)
-                newDate.setFullYear(date.getFullYear() - 1)
-                setDate(newDate)
-              }}
-              aria-label="이전 년도"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M15 18l-6-6 6-6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <span className="current-year">{date.getFullYear()}</span>
-            <button
-              className="year-nav next svg-btn svg-btn-default svg-btn-sm"
-              onClick={() => {
-                const newDate = new Date(date)
-                newDate.setFullYear(date.getFullYear() + 1)
-                setDate(newDate)
-              }}
-              aria-label="다음 년도"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M9 18l6-6-6-6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="month-grid">
-            {months.map((month: string, index: number) => (
-              <button
-                key={month}
-                className={`month-btn ${
-                  date.getMonth() === index ? "selected" : ""
-                }`}
-                onClick={() => handleMonthChange(date.getFullYear(), index)}
-              >
-                {month}
-              </button>
-            ))}
-          </div>
-        </div>
+      {/* 모달 렌더링 - React Portal 사용, 타입 수정 */}
+      {(showMonthSelector || isClosingModal) && (
+        <MonthSelectorModal
+          isMobile={isMobile}
+          isClosing={isClosingModal}
+          onClose={closeMonthSelector}
+          selectedYear={selectedYear}
+          selectedMonth={selectedMonth}
+          onYearChange={handleYearChange}
+          onMonthSelect={handleMonthSelect}
+          months={months}
+          date={date}
+          monthSelectorRef={monthSelectorRef}
+        />
       )}
 
       <div className="weekdays-row">
