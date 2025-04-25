@@ -1,0 +1,290 @@
+/* src/app/success/page.module.scss */
+
+/* 전체 페이지 컨테이너 */
+.successPage {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 세로 중앙 정렬을 위해 변경 */
+  height: calc(100vh - 24.2rem);
+  overflow: hidden;
+
+  @media (min-width: #{($screen-md + 1px)}) {
+    height: calc(100vh - 23rem);
+  }
+}
+
+/* 신규가입 혜택 배너 스타일 */
+.promotionBanner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: $bg-light;
+  border-radius: $border-radius-full;
+  padding: $spacing-sm $spacing-lg $spacing-sm $spacing-xl;
+  margin-top: $spacing-2xl;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.promotionText {
+  color: $text-highlight;
+  font-size: $font-md;
+  font-weight: $weight-medium;
+}
+
+.promotionButton {
+  background-color: #ffefdb;
+  color: $text-highlight;
+  font-size: $font-xs;
+  font-weight: $weight-medium;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $border-radius-full;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: lighten($primary, 5%);
+  }
+}
+
+/* 페이지 컴포넌트 스타일 */
+.completePage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 중앙 정렬 */
+  align-items: center;
+  width: 100%;
+  flex: 1;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  &.animateIn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.completeContainer {
+  width: 32rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.completeIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 8rem;
+  height: 8rem;
+  animation: scaleIn 0.5s ease 0.2s both, pulse 1.5s ease-in-out 1s infinite;
+
+  &.success {
+    color: $primary;
+  }
+
+  &.info {
+    color: $accent;
+  }
+
+  &.error {
+    color: $error;
+  }
+
+  &.sound {
+    color: $secondary;
+  }
+}
+
+.shimmerCheck {
+  width: 100%;
+  height: 100%;
+}
+
+.circle {
+  animation: drawCircle 1s ease forwards;
+  stroke-dasharray: 302;
+  stroke-dashoffset: 302;
+}
+
+.check {
+  animation: drawCheck 0.5s ease 0.8s forwards;
+  stroke-dasharray: 68;
+  stroke-dashoffset: 68;
+}
+
+.completeTitle {
+  font-size: $font-lg;
+  font-weight: $weight-regular;
+  color: $text-primary;
+  margin-top: $spacing-xl;
+  animation: fadeIn 0.5s ease 0.3s both;
+}
+
+.completeAmount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: $spacing-md;
+  animation: fadeIn 0.5s ease 0.4s both;
+}
+
+.amountValue {
+  font-family: $font-en-primary;
+  font-size: $font-4xl;
+  font-weight: $weight-bold;
+  color: $text-primary;
+  line-height: 1.2;
+}
+
+.amountUnit {
+  font-family: $font-en-secondary;
+  font-size: $font-2xl;
+  color: $text-secondary;
+  margin-top: $spacing-xs;
+}
+
+.completeSubtext {
+  font-size: $font-md;
+  color: $text-secondary;
+  margin-top: $spacing-sm;
+  animation: fadeIn 0.5s ease 0.5s both;
+}
+
+.redirectCountdown {
+  display: flex;
+  gap: $spacing-xs;
+  align-items: center;
+  font-size: $font-sm;
+  color: $text-secondary;
+  margin: $spacing-md 0;
+  animation: fadeIn 0.5s ease 0.6s both;
+}
+
+.countdownNumber {
+  font-weight: $weight-semibold;
+  color: $text-highlight;
+}
+
+.completeActions {
+  display: flex;
+  gap: $spacing-md;
+  width: 100%;
+  margin-top: auto;
+  padding-bottom: $spacing-2xl;
+  animation: slideUp 0.5s ease 0.7s both;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: $max-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $spacing-xl;
+  padding-right: $spacing-xl;
+  background: linear-gradient(to top, rgba($bg-dark, 1) 80%, rgba($bg-dark, 0));
+  z-index: 10;
+  padding-top: $spacing-xl;
+
+  :global(.btn) {
+    flex: 1;
+  }
+}
+
+/* 애니메이션 정의 */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes drawCircle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 태블릿/데스크톱 레이아웃 */
+@media (min-width: $screen-md) {
+  .promotionBanner {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .completeIcon {
+    width: 10.2rem;
+    height: 10.2rem;
+  }
+
+  .completeTitle {
+    font-size: $font-2xl;
+  }
+
+  .completeActions {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    max-width: $max-width;
+    padding: $spacing-2xl $spacing-2xl 6rem;
+    transform: translateX(-50%);
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+
+    :global(.btn) {
+      min-width: 12rem;
+    }
+  }
+
+  .amountValue {
+    font-size: 6rem;
+  }
+}

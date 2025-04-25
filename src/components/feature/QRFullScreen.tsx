@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react"
 import QRCode from "react-qr-code"
 import { createPortal } from "react-dom"
+import { useRouter } from "next/navigation" // 라우터 추가
 
 // SVG 파일 import
 import ConerSvg from "@/assets/icons/Coner.svg"
@@ -20,9 +21,11 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
   isOpen,
   onClose,
 }) => {
+  const router = useRouter() // 라우터 추가
   const [closing, setClosing] = useState(false)
   const [qrSize, setQrSize] = useState(280)
   const [mounted, setMounted] = useState(false)
+  const [scanning, setScanning] = useState(false) // 스캔 상태 추가
 
   // 클라이언트 사이드에서만 렌더링하기 위한 처리
   useEffect(() => {
@@ -68,14 +71,44 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
   }
 
   // 햅틱 피드백 함수
-  const triggerHaptic = () => {
+  const triggerHaptic = (pattern: number | number[] = 50) => {
     if (window.navigator && window.navigator.vibrate) {
       try {
-        window.navigator.vibrate(50)
+        window.navigator.vibrate(pattern)
       } catch (e) {
         console.log("Haptic feedback not supported")
       }
     }
+  }
+
+  // QR 코드 클릭 핸들러 추가 - 성공 페이지로 이동
+  const handleQRClick = () => {
+    // 이미 스캔 중인 경우 중복 실행 방지
+    if (scanning) return
+
+    // 스캔 상태로 변경
+    setScanning(true)
+
+    // 스캔 효과를 위한 햅틱 피드백
+    triggerHaptic([50, 30, 50])
+
+    // 스캔 효과를 위한 딜레이 후 리다이렉션
+    setTimeout(() => {
+      // 먼저 모달 닫기
+      setClosing(true)
+
+      // 애니메이션 완료 후 페이지 이동
+      setTimeout(() => {
+        onClose()
+        setClosing(false)
+        setScanning(false)
+
+        // 성공 페이지로 이동 (인코딩된 파라미터 포함)
+        router.push(
+          "/success?title=포인트 결제 성공!&amount=500&unit=SLVN Point"
+        )
+      }, 300)
+    }, 800) // 스캔 효과를 위한 딜레이
   }
 
   // 컴포넌트 마운트 확인 또는 모달이 닫혀있으면 null 반환
@@ -88,7 +121,10 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
       onClick={handleBackdropClick}
     >
       <div className={`qr-fullscreen-content ${closing ? "closing" : ""}`}>
-        <div className="qr-container-large">
+        <div
+          className={`qr-container-large ${scanning ? "scanning" : ""}`}
+          onClick={handleQRClick}
+        >
           <ConerSvg className="corner corner-tl" />
           <ConerSvg className="corner corner-tr" />
           <ConerSvg className="corner corner-br" />
@@ -105,7 +141,9 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
           />
         </div>
         <div className="qr-overlay-status">
-          <div className="scanning-text">Scanning...</div>
+          <div className="scanning-text">
+            {scanning ? "Processing..." : "Scanning..."}
+          </div>
         </div>
         <button
           className="qr-close-button btn"
@@ -113,6 +151,7 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
             triggerHaptic()
             handleClose()
           }}
+          disabled={scanning}
         >
           취소
         </button>

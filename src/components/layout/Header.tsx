@@ -1,10 +1,29 @@
-// src/components/Header.tsx
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 
 export default function Header() {
+  const [scrolled, setScrolled] = useState(false)
+
+  // 스크롤 이벤트 처리
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled)
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [scrolled])
+
   return (
-    <header className="header">
+    <header className={`header ${scrolled ? "scrolled" : ""}`}>
       <div className="header-content">
         <Link href="/" className="logo-container">
           <h1 className="logo">
@@ -12,8 +31,8 @@ export default function Header() {
               src="/images/logo_w.svg"
               alt="Solvion Logo"
               width={120}
-              height={25}
-              className="logo-svg svg-fix"
+              height={24}
+              className="logo-svg"
               priority
             />
           </h1>

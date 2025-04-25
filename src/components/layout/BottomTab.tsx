@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
 
-// SVG 파일 import
+// 실제 SVG 파일 이름에 맞게 import
 import CategoryIcon from "@/assets/icons/Category.svg"
 import DocumentIcon from "@/assets/icons/Document.svg"
 import PlusIcon from "@/assets/icons/Plus.svg"
@@ -17,6 +17,17 @@ export default function BottomTab() {
   const lastScrollTop = useRef(0)
   const scrollTimer = useRef<NodeJS.Timeout | null>(null)
   const [isMobile, setIsMobile] = useState(false)
+
+  // 성공 페이지에서는 탭바를 숨김
+  const hideTabOnPages = ["/success"]
+  const shouldHideTab = hideTabOnPages.some((page) =>
+    pathname?.startsWith(page)
+  )
+
+  // 탭바를 아예 표시하지 않는 경우 일찍 리턴
+  if (shouldHideTab) {
+    return null
+  }
 
   const isActive = (path: string) => pathname === path
 

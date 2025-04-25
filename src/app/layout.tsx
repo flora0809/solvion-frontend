@@ -1,7 +1,7 @@
 // src/app/layout.tsx
 import "./globals.scss"
-import Header from "@/components/Header"
-import BottomTab from "@/components/BottomTab"
+import Header from "@/components/layout/Header"
+import BottomTab from "@/components/layout/BottomTab"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {

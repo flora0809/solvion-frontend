@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useState } from "react"
-import PointCard from "@/components/PointCard"
-import HistoryList from "@/components/HistoryList"
+import PointCard from "@/components/feature/PointCard"
+import HistoryList from "@/components/feature/HistoryList"
 import { mainHistoryData } from "@/data/historyData"
 import styles from "./page.module.scss"
 import Link from "next/link"

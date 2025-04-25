@@ -1,0 +1,180 @@
+<svg width="101" height="96" viewBox="0 0 101 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g id="soundwave_1">
+    <g id="Group">
+      <path
+        id="Vector"
+        opacity="0.01"
+        d="M44.666 31.3334V31.3335"
+        stroke="white"
+        stroke-width="3.33333"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <animate
+          attributeName="d"
+          dur="1540ms"
+          repeatCount="indefinite"
+          values="M44.666 31.333C44.666 31.334 44.666 31.334 44.666 31.334;M44.666 31.333C44.666 61.333 44.666 61.333 44.666 61.333;M44.666 31.333C44.666 61.333 44.666 61.333 44.666 61.333"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0.33 0 0.719 1;0.33 0 0.719 1"
+        />
+        <animate
+          attributeName="opacity"
+          dur="1540ms"
+          repeatCount="indefinite"
+          values="0.01;1;1"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0.33 0 0.719 1;0.33 0 0.719 1"
+        />
+      </path>
+      <path
+        id="Vector_2"
+        opacity="0.01"
+        d="M38 54.6747L38 54.6746"
+        stroke="white"
+        stroke-width="3.33333"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <animate
+          attributeName="d"
+          dur="1580ms"
+          repeatCount="indefinite"
+          values="M38.000 54.675C38.000 54.675 38.000 54.675 38.000 54.675;M38.000 54.675C38.000 41.345 38.000 41.345 38.000 41.345;M38.000 41.333C38.000 54.667 38.000 54.667 38.000 54.667"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0.44 0 0.7648 1;0.44 0 0.7648 1"
+        />
+        <animate
+          attributeName="opacity"
+          dur="1580ms"
+          repeatCount="indefinite"
+          values="0.01;0.8;0.8"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0.44 0 0.7648 1;0.44 0 0.7648 1"
+        />
+      </path>
+      <path
+        id="Vector_3"
+        opacity="0.01"
+        d="M31.333 46.3334V46.3335"
+        stroke="white"
+        stroke-width="3.33333"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <animate
+          attributeName="d"
+          dur="1620ms"
+          repeatCount="indefinite"
+          values="M31.333 46.333C31.333 46.334 31.333 46.334 31.333 46.334;M31.333 46.333C31.333 49.663 31.333 49.663 31.333 49.663;M31.333 46.333C31.333 49.667 31.333 49.667 31.333 49.667"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0.88 0 0.9496 1;0.88 0 0.9496 1"
+        />
+        <animate
+          attributeName="opacity"
+          dur="1620ms"
+          repeatCount="indefinite"
+          values="0.01;0.5;0.5"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0.88 0 0.9496 1;0.88 0 0.9496 1"
+        />
+      </path>
+      <path
+        id="Vector_4"
+        opacity="0.01"
+        d="M48.3301 61.6699L48.3301 61.67"
+        stroke="white"
+        stroke-width="3.33333"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <animate
+          attributeName="d"
+          dur="1660ms"
+          repeatCount="indefinite"
+          values="M48.330 61.670C48.330 61.670 48.330 61.670 48.330 61.670;M51.330 61.670C51.330 61.670 51.330 61.670 51.330 61.670;M51.333 31.333C51.333 61.333 51.333 61.333 51.333 61.333"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0.22 0 0.6724 1;0.22 0 0.6724 1"
+        />
+        <animate
+          attributeName="opacity"
+          dur="1660ms"
+          repeatCount="indefinite"
+          values="0.01;0.01;1"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0.22 0 0.6724 1;0.22 0 0.6724 1"
+        />
+      </path>
+      <path
+        id="Vector_5"
+        opacity="0.01"
+        d="M58 41.3334V41.3335"
+        stroke="white"
+        stroke-width="3.33333"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <animate
+          attributeName="d"
+          dur="1700ms"
+          repeatCount="indefinite"
+          values="M58.000 41.333C58.000 41.334 58.000 41.334 58.000 41.334;M58.000 41.333C58.000 41.334 58.000 41.334 58.000 41.334;M58.000 41.333C58.000 54.667 58.000 54.667 58.000 54.667"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0 0 0.58 1;0 0 0.58 1"
+        />
+        <animate
+          attributeName="opacity"
+          dur="1700ms"
+          repeatCount="indefinite"
+          values="0.01;0.01;0.7"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0 0 0.58 1;0 0 0.58 1"
+        />
+      </path>
+      <path
+        id="Vector_6"
+        opacity="0.01"
+        d="M64.666 46.3334V46.3335"
+        stroke="white"
+        stroke-width="3.33333"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <animate
+          attributeName="d"
+          dur="2000ms"
+          repeatCount="indefinite"
+          values="M64.666 46.333C64.666 46.334 64.666 46.334 64.666 46.334;M64.666 46.333C64.666 46.334 64.666 46.334 64.666 46.334;M64.666 46.333C64.666 49.667 64.666 49.667 64.666 49.667"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0 0 0.58 1;0 0 0.58 1"
+        />
+        <animate
+          attributeName="opacity"
+          dur="2000ms"
+          repeatCount="indefinite"
+          values="0.01;0.01;0.5"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0 0 0.58 1;0 0 0.58 1"
+        />
+      </path>
+    </g>
+  </g>
+</svg>
