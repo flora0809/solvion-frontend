@@ -1,12 +1,13 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import Link from "next/link"
 import ShimmerCheck from "@/components/ui/ShimmerCheck"
 import styles from "./page.module.scss"
 
-export default function SuccessPage() {
+// useSearchParams를 사용하는 실제 컴포넌트를 분리합니다
+function SuccessContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -145,5 +146,14 @@ export default function SuccessPage() {
         </Link>
       </div>
     </div>
+  )
+}
+
+// 메인 페이지 컴포넌트는 Suspense로 감싸서 내보냅니다
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div className={styles.loading}>로딩 중...</div>}>
+      <SuccessContent />
+    </Suspense>
   )
 }
