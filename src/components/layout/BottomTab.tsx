@@ -3,8 +3,6 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, useRef } from "react"
-
-// 실제 SVG 파일 이름에 맞게 import
 import CategoryIcon from "@/assets/icons/Category.svg"
 import DocumentIcon from "@/assets/icons/Document.svg"
 import PlusIcon from "@/assets/icons/Plus.svg"
@@ -18,7 +16,6 @@ export default function BottomTab() {
   const scrollTimer = useRef<NodeJS.Timeout | null>(null)
   const [isMobile, setIsMobile] = useState(false)
 
-  // 성공 페이지에서는 탭바를 숨김
   const hideTabOnPages = ["/success"]
   const shouldHideTab = hideTabOnPages.some((page) =>
     pathname?.startsWith(page)
@@ -92,7 +89,6 @@ export default function BottomTab() {
           <CategoryIcon />
         </div>
       </Link>
-
       <Link
         href="/history"
         className={`tab-item ${isActive("/history") ? "active" : ""}`}
@@ -101,13 +97,11 @@ export default function BottomTab() {
           <DocumentIcon />
         </div>
       </Link>
-
       <Link href="/scan" className="tab-item tab-item-center">
         <div className="tab-icon-center">
           <PlusIcon className="plus-icon" />
         </div>
       </Link>
-
       <Link
         href="/coupon"
         className={`tab-item ${isActive("/coupon") ? "active" : ""}`}
@@ -116,7 +110,6 @@ export default function BottomTab() {
           <NoticeIcon />
         </div>
       </Link>
-
       <Link
         href="/reward"
         className={`tab-item ${isActive("/reward") ? "active" : ""}`}
