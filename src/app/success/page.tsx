@@ -6,42 +6,56 @@ import Link from "next/link"
 import ShimmerCheck from "@/components/ui/ShimmerCheck"
 import styles from "./page.module.scss"
 
-// useSearchParams를 사용하는 실제 컴포넌트를 분리합니다
+// 내부 컴포넌트
 function SuccessContent() {
+  // 모든 훅은 컴포넌트 최상위 레벨에서 호출
   const router = useRouter()
   const searchParams = useSearchParams()
-
-  // URL 파라미터에서 값 추출
-  const title = searchParams.get("title") || "포인트 결제 성공!"
-  const amount = searchParams.get("amount") || "500"
-  const unit = searchParams.get("unit") || "SLVN Point"
-  const subText = searchParams.get("subText") || ""
-  const iconType =
-    (searchParams.get("iconType") as "success" | "info" | "error" | "sound") ||
-    "success"
-  const mainButtonText = searchParams.get("mainBtn") || "확인"
-  const mainButtonPath = searchParams.get("mainPath") || "/"
-  const subButtonText = searchParams.get("subBtn") || "상세내역"
-  const subButtonPath = searchParams.get("subPath") || "/history"
-  const redirectTime = parseInt(searchParams.get("redirectTime") || "0")
-  const redirectPath = searchParams.get("redirectPath") || "/"
-
-  const [countdown, setCountdown] = useState(redirectTime)
+  const [countdown, setCountdown] = useState(0)
   const [animate, setAnimate] = useState(false)
 
-  // body 스크롤 방지
+  // URL 파라미터에서 값 추출
+  const title = searchParams
+    ? searchParams.get("title") || "포인트 결제 성공!"
+    : "포인트 결제 성공!"
+  const amount = searchParams ? searchParams.get("amount") || "500" : "500"
+  const unit = searchParams
+    ? searchParams.get("unit") || "SLVN Point"
+    : "SLVN Point"
+  const subText = searchParams ? searchParams.get("subText") || "" : ""
+  const iconType = searchParams
+    ? (searchParams.get("iconType") as
+        | "success"
+        | "info"
+        | "error"
+        | "sound") || "success"
+    : "success"
+  const mainButtonText = searchParams
+    ? searchParams.get("mainBtn") || "확인"
+    : "확인"
+  const mainButtonPath = searchParams
+    ? searchParams.get("mainPath") || "/"
+    : "/"
+  const subButtonText = searchParams
+    ? searchParams.get("subBtn") || "상세내역"
+    : "상세내역"
+  const subButtonPath = searchParams
+    ? searchParams.get("subPath") || "/history"
+    : "/history"
+  const redirectTime = searchParams
+    ? parseInt(searchParams.get("redirectTime") || "0")
+    : 0
+  const redirectPath = searchParams
+    ? searchParams.get("redirectPath") || "/"
+    : "/"
+
+  // 초기화 효과
   useEffect(() => {
-    // 컴포넌트가 마운트될 때 body에 overflow: hidden 적용
+    // countdown 초기화
+    setCountdown(redirectTime)
+
+    // 나머지 효과들...
     document.body.style.overflow = "hidden"
-
-    // 컴포넌트가 언마운트될 때 원래대로 되돌리기
-    return () => {
-      document.body.style.overflow = ""
-    }
-  }, [])
-
-  // 진입 애니메이션
-  useEffect(() => {
     setAnimate(true)
 
     // 햅틱 피드백
@@ -58,7 +72,11 @@ function SuccessContent() {
         console.log("Haptic feedback not supported")
       }
     }
-  }, [iconType])
+
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [iconType, redirectTime])
 
   // 자동 리다이렉트 기능
   useEffect(() => {
@@ -149,7 +167,7 @@ function SuccessContent() {
   )
 }
 
-// 메인 페이지 컴포넌트는 Suspense로 감싸서 내보냅니다
+// 메인 컴포넌트
 export default function SuccessPage() {
   return (
     <Suspense fallback={<div className={styles.loading}>로딩 중...</div>}>

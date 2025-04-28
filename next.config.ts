@@ -1,4 +1,3 @@
-// next.config.ts
 import path from "path"
 import type { NextConfig } from "next"
 
@@ -28,6 +27,15 @@ const nextConfig: NextConfig = {
       ],
     })
     return config
+  },
+  output: "export", // 👉 추가
+  exportPathMap: async (
+    defaultPathMap,
+    { dev, dir, outDir, distDir, buildId }
+  ) => {
+    const paths = { ...defaultPathMap }
+    delete paths["/success"] // 👉 success 페이지 빌드에서 제외
+    return paths
   },
 }
 
