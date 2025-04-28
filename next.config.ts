@@ -3,10 +3,12 @@ import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // scss 전역 변수 경로
   sassOptions: {
     includePaths: [path.join(process.cwd(), "src")],
     prependData: `@import "css/_variables.scss";`,
   },
+  // SVG를 React 컴포넌트로 불러오기
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -28,15 +30,8 @@ const nextConfig: NextConfig = {
     })
     return config
   },
-  output: "export", // 👉 추가
-  exportPathMap: async (
-    defaultPathMap,
-    { dev, dir, outDir, distDir, buildId }
-  ) => {
-    const paths = { ...defaultPathMap }
-    delete paths["/success"] // 👉 success 페이지 빌드에서 제외
-    return paths
-  },
+  // 정적 내보내기 모드
+  output: "export",
 }
 
 export default nextConfig

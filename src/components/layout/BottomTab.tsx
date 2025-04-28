@@ -24,11 +24,6 @@ export default function BottomTab() {
     pathname?.startsWith(page)
   )
 
-  // 탭바를 아예 표시하지 않는 경우 일찍 리턴
-  if (shouldHideTab) {
-    return null
-  }
-
   const isActive = (path: string) => pathname === path
 
   useEffect(() => {
@@ -84,6 +79,11 @@ export default function BottomTab() {
       if (scrollTimer.current) clearTimeout(scrollTimer.current)
     }
   }, [isMobile])
+
+  // 조기 반환을 훅 호출 이후로 이동
+  if (shouldHideTab) {
+    return null
+  }
 
   return (
     <nav className={`bottom-tab ${visible ? "" : "hidden"}`}>
