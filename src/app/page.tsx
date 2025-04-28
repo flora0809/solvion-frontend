@@ -19,7 +19,7 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <PointCard variant="home" points="100M" qrLinkPath="/qr" />
+      <PointCard variant="home" points="1,000,000" qrLinkPath="/qr" />
 
       {/* 하단 메뉴 아이콘 */}
       <div className={styles.menuIcons}>
