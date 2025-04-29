@@ -8,8 +8,8 @@ import { HistoryItem } from "@/types/history"
 import styles from "./page.module.scss"
 import Link from "next/link"
 
-// 결제 금액 설정 - 컴포넌트 내부로 이동
-export const DEDUCT_AMOUNT = 15000 // 15000원으로 설정 - export 추가
+// 컴포넌트 내부에서 상수 정의 (export 하지 않음)
+const DEDUCT_AMOUNT = 15000 // 15000원으로 설정
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())

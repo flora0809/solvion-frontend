@@ -5,7 +5,9 @@ import QRCode from "react-qr-code"
 import { createPortal } from "react-dom"
 import { useRouter } from "next/navigation"
 import ConerSvg from "@/assets/icons/Coner.svg"
-import { DEDUCT_AMOUNT } from "@/app/page" // 경로 수정
+
+// 상수 직접 정의
+const DEFAULT_DEDUCT_AMOUNT = 15000
 
 interface QRFullScreenProps {
   qrValue: string
@@ -18,7 +20,7 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
   qrValue,
   isOpen,
   onClose,
-  deductAmount = DEDUCT_AMOUNT, // 기본값을 DEDUCT_AMOUNT 상수로 설정
+  deductAmount = DEFAULT_DEDUCT_AMOUNT, // 기본값 설정
 }) => {
   const router = useRouter()
   const [closing, setClosing] = useState(false)
@@ -65,7 +67,7 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
     if (window.navigator && window.navigator.vibrate) {
       try {
         window.navigator.vibrate(pattern)
-      } catch (e) {
+      } catch (error) {
         console.log("Haptic feedback not supported")
       }
     }
@@ -77,7 +79,7 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
     triggerHaptic([50, 30, 50])
 
     // 사용할 결제 금액 (props로 전달된 값 또는 기본값)
-    const paymentAmount = deductAmount || DEDUCT_AMOUNT
+    const paymentAmount = deductAmount || DEFAULT_DEDUCT_AMOUNT
 
     setTimeout(() => {
       setClosing(true)

@@ -6,9 +6,9 @@ import Link from "next/link"
 import ShimmerCheck from "@/components/ui/ShimmerCheck"
 import styles from "./page.module.scss"
 import { addPaymentHistory } from "@/data/historyData" // 결제 내역 추가 함수 임포트
-import { DEDUCT_AMOUNT } from "@/app/page" // 경로 수정: '../page' -> '@/app/page'
 
-// localStorage 키 상수
+// 상수 직접 정의
+const DEFAULT_DEDUCT_AMOUNT = 15000
 const POINTS_STORAGE_KEY = "solvion_demo_points"
 
 // 내부 컴포넌트
@@ -73,8 +73,8 @@ function SuccessContent() {
     try {
       if (typeof window === "undefined") return
 
-      // 차감할 금액을 숫자로 변환 (기본값 DEDUCT_AMOUNT)
-      let deductionAmount = DEDUCT_AMOUNT
+      // 차감할 금액을 숫자로 변환 (기본값 DEFAULT_DEDUCT_AMOUNT)
+      let deductionAmount = DEFAULT_DEDUCT_AMOUNT
       try {
         // URL 파라미터에서 amount 값을 가져와 숫자로 변환
         if (amount) {

@@ -4,7 +4,12 @@ import { useEffect, useState, useRef } from "react"
 import QRCode from "react-qr-code"
 import JsBarcode from "jsbarcode"
 import QRFullScreen from "./QRFullScreen"
-import { DEDUCT_AMOUNT } from "@/app/page" // 경로 수정
+
+// 상수 직접 정의
+const DEFAULT_DEDUCT_AMOUNT = 15000
+const INITIAL_POINTS = "1,000,000"
+const POINTS_STORAGE_KEY = "solvion_demo_points"
+const HISTORY_STORAGE_KEY = "solvion_payment_history"
 
 interface PointCardProps {
   variant?: "home" | "reward"
@@ -15,18 +20,13 @@ interface PointCardProps {
   deductAmount?: number // deductAmount 속성 추가
 }
 
-// localStorage 키 상수
-const POINTS_STORAGE_KEY = "solvion_demo_points"
-const HISTORY_STORAGE_KEY = "solvion_payment_history" // 내역 저장 키 추가
-const INITIAL_POINTS = "1,000,000"
-
 export default function PointCard({
   variant = "home",
   initialPoints = INITIAL_POINTS,
   qrLinkPath = "/qr",
   qrValue = "https://solvion.app/user/12345",
   barcodeValue = "5241966751362770",
-  deductAmount = DEDUCT_AMOUNT, // 기본값 설정
+  deductAmount = DEFAULT_DEDUCT_AMOUNT, // 기본값 설정
 }: PointCardProps) {
   const [isMobile, setIsMobile] = useState(true)
   const [copySuccess, setCopySuccess] = useState(false)
@@ -117,7 +117,7 @@ export default function PointCard({
     if (window.navigator && window.navigator.vibrate) {
       try {
         window.navigator.vibrate(50)
-      } catch (e) {
+      } catch (error) {
         // 오류 처리 추가
         console.log("Vibration API not supported")
       }
@@ -142,7 +142,7 @@ export default function PointCard({
           if (window.navigator && window.navigator.vibrate) {
             try {
               window.navigator.vibrate([50, 100, 50])
-            } catch (e) {
+            } catch (error) {
               // 오류 처리 추가
               console.log("Vibration API not supported")
             }
@@ -187,8 +187,8 @@ export default function PointCard({
           console.error("복사 실패")
         }
       }
-    } catch (err) {
-      console.error("복사에 실패했습니다:", err)
+    } catch (error) {
+      console.error("복사에 실패했습니다:", error)
     }
   }
 
