@@ -1,27 +1,52 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import PointCard from "@/components/feature/PointCard"
 import HistoryList from "@/components/feature/HistoryList"
-import { mainHistoryData } from "@/data/historyData"
+import { getLatestHistoryData } from "@/data/historyData"
+import { HistoryItem } from "@/types/history"
 import styles from "./page.module.scss"
 import Link from "next/link"
 
+// 결제 금액 설정 - 여기서 한 번만 정의하고 다른 컴포넌트에 전달
+export const DEDUCT_AMOUNT = 15000 // 15000원으로 설정
+
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([])
+
+  // 내역 데이터 로드 및 업데이트
+  useEffect(() => {
+    // 초기 데이터 로드
+    updateHistoryData()
+
+    // localStorage 변경을 감지하기 위한 주기적 업데이트
+    const intervalId = setInterval(updateHistoryData, 1000)
+
+    return () => clearInterval(intervalId)
+  }, [])
+
+  // 최신 내역 데이터 업데이트 함수
+  const updateHistoryData = () => {
+    const latestData = getLatestHistoryData(2) // 항상 최신 2개만 가져오기
+    setHistoryItems(latestData)
+  }
 
   const handleDateChange = (date: Date | null) => {
     if (date) {
       setSelectedDate(date)
-      // 필요에 따라 선택된 날짜에 대한 처리 로직 추가
     }
   }
 
   return (
     <div className={styles.page}>
-      <PointCard variant="home" points="1,000,000" qrLinkPath="/qr" />
-
-      {/* 하단 메뉴 아이콘 */}
+      <PointCard
+        variant="home"
+        initialPoints="1,000,000"
+        qrLinkPath="/qr"
+        // 고정된 금액 전달
+        deductAmount={DEDUCT_AMOUNT}
+      />
       <div className={styles.menuIcons}>
         <div className={styles.menuItem}>
           <div
@@ -72,17 +97,13 @@ export default function Home() {
           <span>리워드포인트</span>
         </Link>
       </div>
-
-      {/* 이벤트 배너 */}
       {(() => {
-        // 이벤트 변수
         const eventInfo = {
-          imagePath: "/images/Home_Event_250423.png", // 이미지 경로
+          imagePath: "/images/Home_Event_250423.png",
           title: "SOLVION 신규가입하면<br> 선착순 5,000 포인트 받아요",
           link: "/event",
           actionText: "받으러가기",
         }
-
         return (
           <Link href={eventInfo.link} className={styles.eventCard}>
             <div
@@ -99,35 +120,21 @@ export default function Home() {
                 className={styles.eventTitle}
                 dangerouslySetInnerHTML={{ __html: eventInfo.title }}
               />
-
               <div className={styles.eventAction}>{eventInfo.actionText} →</div>
             </div>
           </Link>
         )
       })()}
-
-      {/* 최근 기록 섹션  */}
       <div className={styles.recentSection}>
-        {/* 메인 페이지에서 사용 */}
         <HistoryList
-          items={mainHistoryData}
+          items={historyItems}
           title="최근기록"
           showCalendar={true}
           pageType="main"
-          maxItems={2}
+          maxItems={2} // 항상 최대 2개만 표시
           onDateChange={handleDateChange}
           selectedDate={selectedDate}
         />
-        {/* // 내역 페이지에서 사용
-        <HistoryList
-          items={fullHistoryData}
-          title="전체내역"
-          showCalendar={true}
-          pageType="history" // 내역 페이지에서는 더보기 버튼 없음
-          showFilter={true}
-          onDateChange={handleDateChange}
-          selectedDate={selectedDate}
-        /> */}
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-// src/components/HistoryList.tsx
+// src/components/feature/HistoryList.tsx
 "use client"
 
 import React, { useState, useEffect, useRef } from "react"

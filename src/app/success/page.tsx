@@ -1,10 +1,15 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useState, Suspense, useRef } from "react"
 import Link from "next/link"
 import ShimmerCheck from "@/components/ui/ShimmerCheck"
 import styles from "./page.module.scss"
+import { addPaymentHistory } from "@/data/historyData" // 결제 내역 추가 함수 임포트
+import { DEDUCT_AMOUNT } from "../page" // 메인 페이지에서 정의한 상수 임포트
+
+// localStorage 키 상수
+const POINTS_STORAGE_KEY = "solvion_demo_points"
 
 // 내부 컴포넌트
 function SuccessContent() {
@@ -13,12 +18,18 @@ function SuccessContent() {
   const searchParams = useSearchParams()
   const [countdown, setCountdown] = useState(0)
   const [animate, setAnimate] = useState(false)
+  const [pointsDeducted, setPointsDeducted] = useState(false)
+  const [historyAdded, setHistoryAdded] = useState(false) // 내역 추가 여부
+
+  // 리렌더링으로 인한 중복 차감 및 내역 추가 방지를 위한 ref
+  const deductedRef = useRef(false)
+  const historyAddedRef = useRef(false)
 
   // URL 파라미터에서 값 추출
   const title = searchParams
     ? searchParams.get("title") || "포인트 결제 성공!"
     : "포인트 결제 성공!"
-  const amount = searchParams ? searchParams.get("amount") || "500" : "500"
+  const amount = searchParams ? searchParams.get("amount") || "5,000" : "5,000" // 기본값 5,000으로 설정
   const unit = searchParams
     ? searchParams.get("unit") || "SLVN Point"
     : "SLVN Point"
@@ -49,8 +60,91 @@ function SuccessContent() {
     ? searchParams.get("redirectPath") || "/"
     : "/"
 
+  // 중요: 차감 수행 여부 플래그 추가
+  const performDeduct = searchParams
+    ? searchParams.get("performDeduct") === "true"
+    : false
+
+  // 포인트 차감 처리 및 내역 추가 함수
+  const processPayment = () => {
+    // 이미 차감되었거나, 차감이 필요 없는 경우
+    if (deductedRef.current || !performDeduct) return
+
+    try {
+      if (typeof window === "undefined") return
+
+      // 차감할 금액을 숫자로 변환 (기본값 DEDUCT_AMOUNT)
+      let deductionAmount = DEDUCT_AMOUNT
+      try {
+        // URL 파라미터에서 amount 값을 가져와 숫자로 변환
+        if (amount) {
+          const amountNum = parseInt(amount.replace(/,/g, ""), 10)
+          if (!isNaN(amountNum)) {
+            deductionAmount = amountNum
+          }
+        }
+      } catch (e) {
+        console.error("금액 변환 오류:", e)
+      }
+
+      console.log("[Success] 차감할 금액:", deductionAmount)
+
+      // 현재 포인트 가져오기
+      const currentPointsStr = localStorage.getItem(POINTS_STORAGE_KEY)
+      if (!currentPointsStr) {
+        localStorage.setItem(POINTS_STORAGE_KEY, "1,000,000")
+        return
+      }
+
+      console.log("[Success] 차감 전 포인트 (문자열):", currentPointsStr)
+
+      // 콤마 제거하고 숫자로 변환
+      const currentPoints = parseInt(currentPointsStr.replace(/,/g, ""), 10)
+      if (isNaN(currentPoints)) {
+        console.error("포인트 변환 오류")
+        return
+      }
+
+      console.log("[Success] 차감 전 포인트 (숫자):", currentPoints)
+
+      // 새 포인트 계산 (최소 0)
+      const newPoints = Math.max(0, currentPoints - deductionAmount)
+      console.log("[Success] 계산된 새 포인트:", newPoints)
+
+      // 포맷팅 (천 단위 콤마)
+      const formattedNewPoints = newPoints.toLocaleString("ko-KR")
+      console.log("[Success] 포맷된 새 포인트:", formattedNewPoints)
+
+      // localStorage에 저장
+      localStorage.setItem(POINTS_STORAGE_KEY, formattedNewPoints)
+
+      // 차감 완료 표시 - state와 ref 모두 업데이트
+      setPointsDeducted(true)
+      deductedRef.current = true
+
+      console.log("[Success] 포인트 차감 완료!")
+
+      // 결제 내역 추가
+      if (!historyAddedRef.current) {
+        const newPayment = addPaymentHistory(deductionAmount)
+        if (newPayment) {
+          console.log("[Success] 결제 내역 추가 완료:", newPayment)
+          setHistoryAdded(true)
+          historyAddedRef.current = true
+        }
+      }
+    } catch (error) {
+      console.error("포인트 차감 오류:", error)
+    }
+  }
+
   // 초기화 효과
   useEffect(() => {
+    if (!deductedRef.current && performDeduct) {
+      // 포인트 차감 및 내역 추가 처리 - 컴포넌트 마운트 시 한 번만 실행
+      processPayment()
+    }
+
     // countdown 초기화
     setCountdown(redirectTime)
 
@@ -76,7 +170,7 @@ function SuccessContent() {
     return () => {
       document.body.style.overflow = ""
     }
-  }, [iconType, redirectTime])
+  }, []) // 빈 배열로 설정하여 컴포넌트 마운트 시 한 번만 실행되도록 함
 
   // 자동 리다이렉트 기능
   useEffect(() => {
