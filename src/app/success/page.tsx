@@ -6,7 +6,7 @@ import Link from "next/link"
 import ShimmerCheck from "@/components/ui/ShimmerCheck"
 import styles from "./page.module.scss"
 import { addPaymentHistory } from "@/data/historyData" // 결제 내역 추가 함수 임포트
-import { DEDUCT_AMOUNT } from "../page" // 메인 페이지에서 정의한 상수 임포트
+import { DEDUCT_AMOUNT } from "@/app/page" // 경로 수정: '../page' -> '@/app/page'
 
 // localStorage 키 상수
 const POINTS_STORAGE_KEY = "solvion_demo_points"

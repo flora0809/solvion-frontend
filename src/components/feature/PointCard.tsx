@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import QRCode from "react-qr-code"
 import JsBarcode from "jsbarcode"
 import QRFullScreen from "./QRFullScreen"
-import { DEDUCT_AMOUNT } from "@/app/page" // 메인 페이지에서 정의한 상수 임포트
+import { DEDUCT_AMOUNT } from "@/app/page" // 경로 수정
 
 interface PointCardProps {
   variant?: "home" | "reward"
@@ -117,7 +117,10 @@ export default function PointCard({
     if (window.navigator && window.navigator.vibrate) {
       try {
         window.navigator.vibrate(50)
-      } catch (e) {}
+      } catch (e) {
+        // 오류 처리 추가
+        console.log("Vibration API not supported")
+      }
     }
     setQrFullScreen(true)
   }
@@ -139,7 +142,10 @@ export default function PointCard({
           if (window.navigator && window.navigator.vibrate) {
             try {
               window.navigator.vibrate([50, 100, 50])
-            } catch (e) {}
+            } catch (e) {
+              // 오류 처리 추가
+              console.log("Vibration API not supported")
+            }
           }
         } catch (error) {
           console.error("리셋 에러:", error)

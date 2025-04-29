@@ -5,7 +5,7 @@ import QRCode from "react-qr-code"
 import { createPortal } from "react-dom"
 import { useRouter } from "next/navigation"
 import ConerSvg from "@/assets/icons/Coner.svg"
-import { DEDUCT_AMOUNT } from "@/app/page" // 메인 페이지에서 정의한 상수 임포트
+import { DEDUCT_AMOUNT } from "@/app/page" // 경로 수정
 
 interface QRFullScreenProps {
   qrValue: string

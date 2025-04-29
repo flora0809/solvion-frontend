@@ -8,12 +8,10 @@ import { HistoryItem } from "@/types/history"
 import styles from "./page.module.scss"
 import Link from "next/link"
 
-// Next.js 페이지 컴포넌트에서는 컴포넌트만 export해야 함
-// 별도 상수는 내보내지 않고 컴포넌트 내부에 선언하거나 별도 파일로 분리해야 함
-export default function Home() {
-  // 결제 금액 설정 - 컴포넌트 내부로 이동
-  const DEDUCT_AMOUNT = 15000 // 15000원으로 설정
+// 결제 금액 설정 - 컴포넌트 내부로 이동
+export const DEDUCT_AMOUNT = 15000 // 15000원으로 설정 - export 추가
 
+export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([])
 
