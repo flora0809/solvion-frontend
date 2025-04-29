@@ -14,11 +14,11 @@ export const mainHistoryData: HistoryItem[] = [
   {
     id: "1",
     date: today.toISOString(),
-    title: "SOLVION 결제 충전",
+    title: "친구추천 가입이벤트",
     subtitle: "빠른 충전",
     amount: 3000000,
     type: "credit",
-    icon: "/images/list_wallet.webp",
+    icon: "/images/list_friend.webp",
   },
   {
     id: "2",
@@ -165,11 +165,11 @@ export const addPaymentHistory = (amount: number): HistoryItem | null => {
     const newPayment: HistoryItem = {
       id: `payment_${Date.now()}`,
       date: new Date().toISOString(),
-      title: "포인트 결제",
+      title: "SOLVION 포인트 결제",
       subtitle: "QR 결제",
       amount: amount,
       type: "debit",
-      icon: "/images/list_payment.webp",
+      icon: "/images/list_wallet.webp",
     }
 
     // 기존 내역 가져오기
