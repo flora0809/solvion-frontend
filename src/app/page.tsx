@@ -8,10 +8,12 @@ import { HistoryItem } from "@/types/history"
 import styles from "./page.module.scss"
 import Link from "next/link"
 
-// 결제 금액 설정 - 여기서 한 번만 정의하고 다른 컴포넌트에 전달
-export const DEDUCT_AMOUNT = 15000 // 15000원으로 설정
-
+// Next.js 페이지 컴포넌트에서는 컴포넌트만 export해야 함
+// 별도 상수는 내보내지 않고 컴포넌트 내부에 선언하거나 별도 파일로 분리해야 함
 export default function Home() {
+  // 결제 금액 설정 - 컴포넌트 내부로 이동
+  const DEDUCT_AMOUNT = 15000 // 15000원으로 설정
+
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([])
 
@@ -44,7 +46,7 @@ export default function Home() {
         variant="home"
         initialPoints="1,000,000"
         qrLinkPath="/qr"
-        // 고정된 금액 전달
+        // 내부 변수로 정의된 금액 전달
         deductAmount={DEDUCT_AMOUNT}
       />
       <div className={styles.menuIcons}>
