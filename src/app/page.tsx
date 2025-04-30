@@ -9,7 +9,7 @@ import styles from "./page.module.scss"
 import Link from "next/link"
 
 // 컴포넌트 내부에서 상수 정의 (export 하지 않음)
-const DEDUCT_AMOUNT = 1500 // 1500원으로 설정
+const DEDUCT_AMOUNT = 150000 // 150000원으로 설정
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
