@@ -16,7 +16,7 @@ export const mainHistoryData: HistoryItem[] = [
     date: today.toISOString(),
     title: "친구추천 가입이벤트",
     subtitle: "빠른 충전",
-    amount: 3000000,
+    amount: 300000,
     type: "credit",
     icon: "/images/list_friend.webp",
   },
