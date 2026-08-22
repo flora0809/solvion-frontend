@@ -11,11 +11,17 @@ const DEFAULT_DEDUCT_AMOUNT = 15000
 // GA 이벤트 전송
 const GA_CURRENCY = "KRW"
 
+type GtagFn = (
+  command: "event",
+  name: string,
+  params?: Record<string, unknown>
+) => void
+
 function track(name: string, params: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return
-  const w = window as any
-  if (typeof w.gtag !== "function") return
-  w.gtag("event", name, params)
+  const gtag = (window as unknown as { gtag?: GtagFn }).gtag
+  if (typeof gtag !== "function") return
+  gtag("event", name, params)
 }
 
 function buildItems(amount: number) {
@@ -96,7 +102,7 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
       try {
         window.navigator.vibrate(pattern)
       } catch (error) {
-        console.log("Haptic feedback not supported")
+        console.log("Haptic feedback not supported", error)
       }
     }
   }
@@ -109,11 +115,10 @@ const QRFullScreen: React.FC<QRFullScreenProps> = ({
     // 사용할 결제 금액 (props로 전달된 값 또는 기본값)
     const paymentAmount = deductAmount || DEFAULT_DEDUCT_AMOUNT
 
-    track("add_payment_info", {
+    track("qr_scan", {
       currency: GA_CURRENCY,
       value: paymentAmount,
       payment_type: "SLVN Point",
-      items: buildItems(paymentAmount),
     })
 
     setTimeout(() => {
