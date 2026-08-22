@@ -1,41 +1,194 @@
-const handleQRClick = () => {
-  if (scanning) return
+"use client"
+import { useEffect, useState } from "react"
+import QRCode from "react-qr-code"
+import { createPortal } from "react-dom"
+import { useRouter } from "next/navigation"
+import ConerSvg from "@/assets/icons/Coner.svg"
 
-  setScanning(true)
-  triggerHaptic([50, 30, 50])
+// 상수 직접 정의
+const DEFAULT_DEDUCT_AMOUNT = 15000
 
-  const paymentAmount = deductAmount || DEFAULT_DEDUCT_AMOUNT
+// GA 이벤트 전송
+const GA_CURRENCY = "KRW"
 
-  setTimeout(() => {
+function track(name: string, params: Record<string, unknown> = {}) {
+  if (typeof window === "undefined") return
+  const w = window as any
+  if (typeof w.gtag !== "function") return
+  w.gtag("event", name, params)
+}
+
+function buildItems(amount: number) {
+  return [
+    {
+      item_id: "slvn_point",
+      item_name: "SLVN Point",
+      item_category: "payment",
+      price: amount,
+      quantity: 1,
+    },
+  ]
+}
+
+interface QRFullScreenProps {
+  qrValue: string
+  isOpen: boolean
+  onClose: () => void
+  deductAmount?: number
+}
+
+const QRFullScreen: React.FC<QRFullScreenProps> = ({
+  qrValue,
+  isOpen,
+  onClose,
+  deductAmount = DEFAULT_DEDUCT_AMOUNT, // 기본값 설정
+}) => {
+  const router = useRouter()
+  const [closing, setClosing] = useState(false)
+  const [qrSize, setQrSize] = useState(280)
+  const [mounted, setMounted] = useState(false)
+  const [scanning, setScanning] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    if (isOpen) {
+      document.body.style.overflow = "hidden"
+      track("begin_checkout", {
+        currency: GA_CURRENCY,
+        value: deductAmount,
+        items: buildItems(deductAmount),
+      })
+    }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [isOpen, deductAmount])
+
+  useEffect(() => {
+    const handleResize = () => {
+      const size =
+        window.innerWidth <= 768
+          ? Math.min(window.innerWidth * 0.7, 280)
+          : Math.min(window.innerWidth * 0.3, 350)
+      setQrSize(size)
+    }
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  const handleClose = () => {
     setClosing(true)
-
     setTimeout(() => {
       onClose()
       setClosing(false)
-      setScanning(false)
-
-      const formattedAmount = paymentAmount.toLocaleString("ko-KR")
-
-      // GA4: QR 포인트 결제 완료
-      const gtag = (
-        window as typeof window & {
-          gtag?: (
-            command: "event",
-            eventName: string,
-            params?: Record<string, unknown>
-          ) => void
-        }
-      ).gtag
-
-      gtag?.("event", "qr_payment_completed", {
-        payment_method: "qr",
-        point_amount: paymentAmount,
-        point_unit: "SLVN Point",
-      })
-
-      router.push(
-        `/success?title=포인트 결제 성공!&amount=${formattedAmount}&unit=SLVN Point&performDeduct=true`
-      )
     }, 300)
-  }, 800)
+  }
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      handleClose()
+    }
+  }
+
+  const triggerHaptic = (pattern: number | number[] = 50) => {
+    if (window.navigator && window.navigator.vibrate) {
+      try {
+        window.navigator.vibrate(pattern)
+      } catch (error) {
+        console.log("Haptic feedback not supported")
+      }
+    }
+  }
+
+  const handleQRClick = () => {
+    if (scanning) return
+    setScanning(true)
+    triggerHaptic([50, 30, 50])
+
+    // 사용할 결제 금액 (props로 전달된 값 또는 기본값)
+    const paymentAmount = deductAmount || DEFAULT_DEDUCT_AMOUNT
+
+    track("add_payment_info", {
+      currency: GA_CURRENCY,
+      value: paymentAmount,
+      payment_type: "SLVN Point",
+      items: buildItems(paymentAmount),
+    })
+
+    setTimeout(() => {
+      setClosing(true)
+      setTimeout(() => {
+        onClose()
+        setClosing(false)
+        setScanning(false)
+
+        track("purchase", {
+          transaction_id: `T${Date.now()}`,
+          currency: GA_CURRENCY,
+          value: paymentAmount,
+          items: buildItems(paymentAmount),
+        })
+
+        // 천 단위 쉼표 포맷팅 적용
+        const formattedAmount = paymentAmount.toLocaleString("ko-KR")
+        // success 페이지로 이동 - 차감 및 내역 추가 지시
+        router.push(
+          `/success?title=포인트 결제 성공!&amount=${formattedAmount}&unit=SLVN Point&performDeduct=true`
+        )
+      }, 300)
+    }, 800)
+  }
+
+  if (!mounted || !isOpen) return null
+
+  return createPortal(
+    <div
+      className={`qr-fullscreen-overlay ${closing ? "closing" : ""}`}
+      onClick={handleBackdropClick}
+    >
+      <div className={`qr-fullscreen-content ${closing ? "closing" : ""}`}>
+        <div
+          className={`qr-container-large ${scanning ? "scanning" : ""}`}
+          onClick={handleQRClick}
+        >
+          <ConerSvg className="corner corner-tl" />
+          <ConerSvg className="corner corner-tr" />
+          <ConerSvg className="corner corner-br" />
+          <ConerSvg className="corner corner-bl" />
+          <div className="scan-line"></div>
+          <QRCode
+            className="qr-code"
+            value={qrValue}
+            size={qrSize}
+            level="M"
+            fgColor="#000"
+            bgColor="#fff"
+          />
+        </div>
+        <div className="qr-overlay-status">
+          <div className="scanning-text">
+            {scanning ? "Processing..." : "Scanning..."}
+          </div>
+        </div>
+        <button
+          className="qr-close-button btn"
+          onClick={() => {
+            triggerHaptic()
+            track("payment_cancel", {
+              currency: GA_CURRENCY,
+              value: deductAmount,
+            })
+            handleClose()
+          }}
+          disabled={scanning}
+        >
+          취소
+        </button>
+      </div>
+    </div>,
+    document.body
+  )
 }
+
+export default QRFullScreen
